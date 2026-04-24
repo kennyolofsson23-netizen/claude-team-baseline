@@ -17,6 +17,14 @@
       "command": "npx",
       "args": ["-y", "@modelcontextprotocol/server-sequential-thinking"],
       "description": "Step-by-step reasoning for complex architecture / debugging tasks. Used by the architect and error-detective agents."
+    },
+    "azure": {
+      "command": "npx",
+      "args": ["-y", "@azure/mcp@latest"],
+      "env": {
+        "AZURE_SUBSCRIPTION_ID": "<YOUR-SUBSCRIPTION-ID>"
+      },
+      "description": "Azure resources — App Service, ACR, Key Vault, App Insights. Auth via az login (no secrets in this file)."
     }
   }
 }

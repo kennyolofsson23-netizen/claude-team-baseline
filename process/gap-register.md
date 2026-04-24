@@ -64,19 +64,12 @@ A resolved gap leaves the register and moves to a proper ADR or into one of the 
 - **Needed by**: After first project is scaffolded and a test DB is provisioned.
 
 ### Error-tracking MCP — choose one
-- **Status**: open
+- **Status**: parked — no App Insights or Sentry provisioned yet
 - **Owner**: ARB
 - **Why it matters**: Sentry MCP and Azure Application Insights both give Claude access to error data. Pick one; wire one; stop there.
 - **Current workaround**: Paste tracebacks into chat.
 - **Needed by**: First production incident.
 
-### Superpowers plugin — install or inline?
-- **Status**: open, my recommendation: install as plugin
-- **Owner**: Kenny
-- **Why it matters**: Ships 14 discipline skills (TDD, planning, debugging, code review). Currently baseline relies on CLAUDE.md + agents to enforce the same behaviours — works but less explicit than having the skills themselves.
-- **Current workaround**: CLAUDE.md hard-codes the key rules.
-- **Proposed**: Add `claude plugin install superpowers` to SETUP.md after bootstrap.
-- **Needed by**: Before team rollout ideally, but not blocking.
 
 ### On-call rotation
 - **Status**: parked
@@ -119,4 +112,5 @@ A resolved gap leaves the register and moves to a proper ADR or into one of the 
 
 ## Resolved gaps
 
-*(Entries move here once closed, with a link to the ADR / PR that resolved them.)*
+### Superpowers plugin
+Resolved: `claude plugin install superpowers` added to `scripts/install.sh`. Installs v5.0.7 from official Anthropic marketplace at bootstrap time. Idempotent — skips if already installed.

@@ -63,6 +63,15 @@ else
     echo "  [keep] existing settings.json (will not overwrite)"
 fi
 
+# .mcp.json — only create if missing, never overwrite
+if [ ! -f "$CLAUDE_DIR/.mcp.json" ]; then
+    cp "$BASELINE_DIR/dotfiles/.mcp.json" "$CLAUDE_DIR/.mcp.json"
+    echo "  [copy] .mcp.json → $CLAUDE_DIR/.mcp.json"
+    echo "  [!] Fill in AZURE_SUBSCRIPTION_ID in $CLAUDE_DIR/.mcp.json"
+else
+    echo "  [keep] existing .mcp.json (will not overwrite)"
+fi
+
 # ---------- step 3: work directory convention ----------
 echo ""
 echo "==> Step 3: work directory convention"
@@ -86,9 +95,19 @@ else
     echo "  [keep] PYTHONUTF8 already in profile"
 fi
 
-# ---------- step 5: verify ----------
+# ---------- step 5: superpowers plugin ----------
 echo ""
-echo "==> Step 5: verify"
+echo "==> Step 5: Claude Code superpowers plugin"
+if claude plugin list 2>/dev/null | grep -q "superpowers"; then
+    echo "  [keep] superpowers already installed"
+else
+    claude plugin install superpowers
+    echo "  [ok] superpowers installed"
+fi
+
+# ---------- step 6: verify ----------
+echo ""
+echo "==> Step 6: verify"
 bash "$BASELINE_DIR/scripts/verify.sh"
 
 echo ""
