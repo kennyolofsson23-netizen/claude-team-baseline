@@ -50,7 +50,7 @@ uv run pytest -k "test_customer"   # run only matching tests
 uv run pytest --cov                # with coverage report
 
 # Full verification gate (everything CI runs)
-uv run ruff format --check && uv run ruff check && uv run mypy && uv run pytest --cov --cov-fail-under=80
+uv run ruff format --check && uv run ruff check && uv run mypy && uv run pytest --cov --cov-fail-under=60
 ```
 
 ## Database

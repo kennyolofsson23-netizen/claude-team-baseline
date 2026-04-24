@@ -8,8 +8,8 @@ The baseline enforces safety in four layers. The higher the layer, the harder it
 |---|---|---|---|---|
 | 1. Managed Claude settings | AI-side: what Claude can run, read, write | `C:\Program Files\ClaudeCode\managed-settings.json` (Phase 2) | IT + architect | No |
 | 2. Project Claude settings | Same as above, project-scoped | `.claude/settings.json` in repo | Architect via PR | Architect only |
-| 3. Git hooks + CI | File-side: what gets committed and what passes CI | `.pre-commit-config.yaml`, `.github/workflows/ci.yml` | Architect via PR | Branch protection blocks merge |
-| 4. CODEOWNERS (Phase 2) | Merge-side: who must approve stack changes | `.github/CODEOWNERS` | Architect | GitHub branch protection |
+| 3. Git hooks + CI | File-side: what gets committed and what passes CI | `.pre-commit-config.yaml`, `azure-pipelines.yml` | Architect via PR | Branch policies block merge |
+| 4. Required reviewers (Phase 2) | Merge-side: who must approve stack changes | ADO branch policies → Required reviewers | Architect | ADO branch protection |
 
 Together, these mean: Claude refuses to suggest off-stack code, pre-commit refuses to stage off-stack files, CI blocks merge on violations, CODEOWNERS requires architect approval for stack-defining changes.
 
@@ -38,7 +38,7 @@ From `template/.claude/settings.json`:
 - `pnpm add react*` / `yarn add react*`
 
 ### Bash allow (common dev commands)
-- `git *`, `gh *`
+- `git *`, `az repos pr *`, `az boards work-item *`, `az repos show*`
 - `uv *`, `ruff *`, `mypy *`, `pytest*`
 - `streamlit run*`, `uvicorn *`, `alembic *`
 - `docker build *`, `docker run *`
@@ -54,7 +54,7 @@ Say a dev prompts Claude: "add React to this app".
 2. **Layer 2 (Write deny)**: Even if the dev types `.tsx` code by hand and asks Claude to edit it, the `Write(**/*.tsx)` deny prevents Claude from writing it.
 3. **Layer 3 (Pre-commit)**: If the dev bypasses Claude and writes the `.tsx` file manually, the pre-commit hook refuses to stage it. The dev can still `git commit --no-verify` — it's not a hard block yet.
 4. **Layer 3 (CI)**: The `--no-verify` bypass doesn't save them. CI re-runs the pre-commit checks on the PR, fails, and blocks merge.
-5. **Layer 4 (CODEOWNERS)** — Phase 2: Even if CI were fixed, merging a change to `pyproject.toml` (adding a new dep) requires architect approval.
+5. **Layer 4 (Required reviewers)** — Phase 2: Even if CI were fixed, ADO branch policies require architect approval before merge.
 
 At every layer a loud signal is produced: deny message, hook stderr, CI red-X. There's no silent failure.
 

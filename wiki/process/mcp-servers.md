@@ -9,16 +9,16 @@
 | **context7** | Fetch current docs for Python libs, FastAPI, SQLAlchemy, Streamlit, MSSQL, etc. | Free | Very low — read-only |
 | **playwright** | Run a headless browser for UI smoke tests (used by `qa-runner`) | Free | Low — local browser |
 | **sequential-thinking** | Structured step-by-step reasoning for complex tasks | Free | None — pure reasoning helper |
+| **azure** | Query Azure resources — App Service, ACR, Key Vault, App Insights | Free | Low — read-only via `az login`, no secrets in config |
 
-All three are `npx`-based, no auth required, start on demand. Claude Code will prompt once to trust them per project.
+All four are `npx`-based, start on demand. `azure` authenticates via `az login` (already part of bootstrap — no extra credentials). Claude Code will prompt once to trust them per project.
 
-## Deferred (Phase 2 — add when ready)
+## Deferred (add when ready)
 
 | MCP | Purpose | Why deferred |
 |---|---|---|
-| **mssql** | Let Claude inspect schema + run SELECTs against a real MSSQL database | Needs Key Vault credentials wired up — gap-register entry |
-| **sentry** | Pull error data from Sentry for debugging | Only if we adopt Sentry (Azure App Insights is the Azure-native alternative — pick one). ARB decision. |
-| **azure** | Query Azure resources (App Services, logs, bills) | Useful, but authentication model needs architect review. |
+| **mssql-tool** | Let Claude inspect schema + run SELECTs against on-prem MSSQL | Planned as first internal project — CLI-native Python tool with `--serve` MCP mode. Windows domain auth via `pyodbc`. |
+| **error-tracking** | Pull error data for debugging | Parked — no App Insights or Sentry provisioned yet. ARB picks one at first production incident. |
 
 ## How to enable a deferred MCP
 

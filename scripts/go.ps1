@@ -32,8 +32,13 @@ if (-not $principal.IsInRole([Security.Principal.WindowsBuiltInRole]::Administra
     exit 1
 }
 
-# ---------- step 1: install tools via winget ----------
-Step 1 "Installing prerequisites via winget"
+# ---------- step 1: WSL update (required for Docker Desktop) ----------
+Step 1 "Updating WSL (required for Docker Desktop)"
+wsl --update 2>&1 | ForEach-Object { Write-Host "    $_" }
+Ok "WSL updated"
+
+# ---------- step 2: install tools via winget ----------
+Step 2 "Installing prerequisites via winget"
 
 $packages = @(
     @{ Id = "Git.Git";                                 Label = "Git" }
@@ -59,16 +64,16 @@ foreach ($p in $packages) {
 # refresh PATH for this session
 $env:Path = [Environment]::GetEnvironmentVariable("Path","Machine") + ";" + [Environment]::GetEnvironmentVariable("Path","User")
 
-# ---------- step 2: UTF-8 env ----------
-Step 2 "Python UTF-8 defaults"
+# ---------- step 3: UTF-8 env ----------
+Step 3 "Python UTF-8 defaults"
 [Environment]::SetEnvironmentVariable("PYTHONUTF8",      "1",     "User")
 [Environment]::SetEnvironmentVariable("PYTHONIOENCODING","utf-8", "User")
 $env:PYTHONUTF8       = "1"
 $env:PYTHONIOENCODING = "utf-8"
 Ok "done"
 
-# ---------- step 3: azure devops authentication ----------
-Step 3 "Azure DevOps authentication"
+# ---------- step 4: azure devops authentication ----------
+Step 4 "Azure DevOps authentication"
 $authState = az account show 2>&1
 if ($LASTEXITCODE -ne 0) {
     Write-Host "  Launching Azure login (browser popup)..."
@@ -86,8 +91,8 @@ if ($LASTEXITCODE -ne 0) {
     Ok "Azure CLI authenticated and azure-devops extension ready"
 }
 
-# ---------- step 4: clone or pull the baseline ----------
-Step 4 "Baseline repo"
+# ---------- step 5: clone or pull the baseline ----------
+Step 5 "Baseline repo"
 New-Item -ItemType Directory -Force -Path $WorkDir | Out-Null
 
 if (Test-Path $BaselinePath) {
@@ -102,8 +107,8 @@ if (Test-Path $BaselinePath) {
     Ok "cloned"
 }
 
-# ---------- step 5: install personal claude config ----------
-Step 5 "Installing personal ~/.claude/ config"
+# ---------- step 6: install personal claude config ----------
+Step 6 "Installing personal ~/.claude/ config"
 $bash = "C:\Program Files\Git\bin\bash.exe"
 if (-not (Test-Path $bash)) { $bash = "$env:ProgramFiles\Git\bin\bash.exe" }
 if (Test-Path $bash) {
@@ -113,8 +118,8 @@ if (Test-Path $bash) {
     Warn "Git Bash not found — reboot and re-run this script."
 }
 
-# ---------- step 6: start the wiki (non-blocking, happens BEFORE claude) ----------
-Step 6 "Starting the wiki"
+# ---------- step 7: start the wiki (non-blocking, happens BEFORE claude) ----------
+Step 7 "Starting the wiki"
 $pythonExe = (Get-Command python -ErrorAction SilentlyContinue).Source
 if ($pythonExe) {
     Start-Process powershell -ArgumentList "-NoExit", "-Command", "python '$BaselinePath\wiki\serve.py'" -WindowStyle Minimized
@@ -125,8 +130,8 @@ if ($pythonExe) {
     Warn "Python not in PATH yet — reboot and run: python $BaselinePath\wiki\serve.py"
 }
 
-# ---------- step 7: claude auth reminder ----------
-Step 7 "Claude authentication — do this manually"
+# ---------- step 8: claude auth reminder ----------
+Step 8 "Claude authentication — do this manually"
 Write-Host "  When ready, run:  claude" -ForegroundColor White
 Write-Host "  A browser will open. Log in with your company Claude account"
 Write-Host "  (or personal Pro/Max until Enterprise is provisioned)."

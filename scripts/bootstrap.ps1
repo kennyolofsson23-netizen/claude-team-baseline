@@ -30,8 +30,13 @@ if (-not $principal.IsInRole([Security.Principal.WindowsBuiltInRole]::Administra
     exit 1
 }
 
-# ---------- STEP 1 — prerequisites via winget ----------
-Step 1 "Installing prerequisites via winget"
+# ---------- STEP 1 — WSL update (required for Docker Desktop) ----------
+Step 1 "Updating WSL (required for Docker Desktop)"
+wsl --update 2>&1 | ForEach-Object { Write-Host "    $_" }
+Ok "WSL updated"
+
+# ---------- STEP 2 — prerequisites via winget ----------
+Step 2 "Installing prerequisites via winget"
 
 $packages = @(
     @{ Id = "Git.Git";                                    Label = "Git"                        },
@@ -62,7 +67,7 @@ $env:Path = [System.Environment]::GetEnvironmentVariable("Path", "Machine") + ";
             [System.Environment]::GetEnvironmentVariable("Path", "User")
 
 # ---------- STEP 2 — user env vars ----------
-Step 2 "Setting Python UTF-8 defaults"
+Step 3 "Setting Python UTF-8 defaults"
 [Environment]::SetEnvironmentVariable("PYTHONUTF8",      "1",     "User")
 [Environment]::SetEnvironmentVariable("PYTHONIOENCODING","utf-8", "User")
 $env:PYTHONUTF8       = "1"
@@ -70,12 +75,12 @@ $env:PYTHONIOENCODING = "utf-8"
 Ok "PYTHONUTF8=1 PYTHONIOENCODING=utf-8 (User env)"
 
 # ---------- STEP 3 — work directory ----------
-Step 3 "Work directory"
+Step 4 "Work directory"
 New-Item -ItemType Directory -Force -Path $WorkDir | Out-Null
 Ok $WorkDir
 
 # ---------- STEP 4 — clone or link baseline ----------
-Step 4 "Baseline repo"
+Step 5 "Baseline repo"
 $BaselinePath = Join-Path $WorkDir "claude-team-baseline"
 
 if (Test-Path $BaselinePath) {
@@ -103,7 +108,7 @@ if (Test-Path $BaselinePath) {
 }
 
 # ---------- STEP 5 — run install.sh via Git Bash ----------
-Step 5 "Running install.sh (Git Bash)"
+Step 6 "Running install.sh (Git Bash)"
 $bash = "C:\Program Files\Git\bin\bash.exe"
 if (-not (Test-Path $bash)) {
     $bash = "$env:ProgramFiles\Git\bin\bash.exe"
@@ -117,7 +122,7 @@ if (Test-Path $bash) {
 }
 
 # ---------- STEP 6 — open Claude login ----------
-Step 6 "Next steps"
+Step 7 "Next steps"
 Write-Host ""
 Write-Host "  1. If Docker / Claude did not register in PATH, REBOOT and re-run this script." -ForegroundColor White
 Write-Host "  2. Authenticate:"                                                                   -ForegroundColor White
