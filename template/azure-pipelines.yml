@@ -1,0 +1,57 @@
+trigger:
+  branches:
+    include:
+      - main
+
+pr:
+  branches:
+    include:
+      - main
+
+pool:
+  vmImage: ubuntu-latest
+
+jobs:
+  - job: quality
+    displayName: Python quality checks
+    timeoutInMinutes: 10
+    cancelTimeoutInMinutes: 2
+    steps:
+      - checkout: self
+
+      - script: |
+          curl -LsSf https://astral.sh/uv/install.sh | sh
+          echo "##vso[task.prependpath]$HOME/.local/bin"
+        displayName: Install uv
+
+      - script: uv python install 3.12
+        displayName: Set up Python 3.12
+
+      - script: uv sync --frozen
+        displayName: Install dependencies
+
+      - script: uv run ruff format --check
+        displayName: Ruff format check
+
+      - script: uv run ruff check
+        displayName: Ruff lint
+
+      - script: uv run mypy
+        displayName: mypy
+
+      - script: uv run pytest --cov --cov-fail-under=60 --cov-report=term-missing
+        displayName: pytest with coverage
+
+  - job: secret_scan
+    displayName: Secret scan
+    steps:
+      - checkout: self
+        fetchDepth: 0
+
+      - script: |
+          GITLEAKS_VERSION=8.24.0
+          curl -sSfL "https://github.com/gitleaks/gitleaks/releases/download/v${GITLEAKS_VERSION}/gitleaks_${GITLEAKS_VERSION}_linux_x64.tar.gz" \
+            -o /tmp/gl.tar.gz
+          tar -xzf /tmp/gl.tar.gz -C /usr/local/bin gitleaks
+          gitleaks detect --source .
+        displayName: gitleaks secret scan

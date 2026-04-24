@@ -20,7 +20,7 @@ That's it. The script handles:
 
 | Step | What it does |
 |---|---|
-| 1 | Installs Git, GitHub CLI, Node.js LTS, Python 3.12, Claude Code, uv, VS Code, Docker Desktop, and MS ODBC Driver 18 — all via winget |
+| 1 | Installs Git, Azure CLI, Node.js LTS, Python 3.12, Claude Code, uv, VS Code, Docker Desktop, and MS ODBC Driver 18 — all via winget |
 | 2 | Sets `PYTHONUTF8=1` and `PYTHONIOENCODING=utf-8` at user scope |
 | 3 | Creates `~/work/` as the project directory |
 | 4 | Clones this baseline repo into `~/work/claude-team-baseline/` (or pulls if already present) |
@@ -33,8 +33,9 @@ You may need to **reboot** if winget just installed Docker Desktop or if some PA
 Once rebooted, finish with:
 
 ```bash
-# Authenticate GitHub
-gh auth login
+# Authenticate Azure DevOps
+az login
+az extension add --name azure-devops
 
 # Authenticate Claude (browser popup — use your company account)
 claude

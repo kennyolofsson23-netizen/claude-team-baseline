@@ -19,7 +19,7 @@ winget --version
 
 # Core tools
 winget install --id Git.Git                      -e --source winget --silent
-winget install --id GitHub.cli                   -e --source winget --silent
+winget install --id Microsoft.AzureCLI          -e --source winget --silent
 winget install --id Python.Python.3.12           -e --source winget --silent
 winget install --id OpenJS.NodeJS.LTS            -e --source winget --silent   # Claude Code CLI uses Node
 winget install --id Anthropic.ClaudeCode         -e --source winget --silent
@@ -43,7 +43,7 @@ Verify each tool:
 
 ```bash
 git --version
-gh --version
+az --version
 node --version         # >= 20
 python --version       # should say 3.12.x
 claude --version
@@ -63,8 +63,9 @@ All must print a version / show the driver. If `claude` or `docker` is missing, 
 ## Step 2 — Authenticate
 
 ```bash
-# GitHub — you'll get a browser popup
-gh auth login
+# Azure DevOps — browser popup
+az login
+az extension add --name azure-devops
 
 # Claude Code — browser popup, log in with your company account
 claude
@@ -85,7 +86,7 @@ git clone <REPO_URL> claude-team-baseline
 cd claude-team-baseline
 ```
 
-Replace `<REPO_URL>` with the actual URL once pushed to GitHub / the company's Git host.
+Replace `<REPO_URL>` with the Azure DevOps clone URL: `https://dev.azure.com/<ORG>/<PROJECT>/_git/claude-team-baseline`
 
 ---
 
@@ -119,8 +120,8 @@ Expected output:
 ✓ uv OK
 ✓ Baseline installed
 ✓ Agents: 12 found
-✓ Skills: 25 found
-✓ Hooks: 6 found
+✓ Skills: 4 found
+✓ Hooks: 8 found
 ✓ Ready.
 ```
 

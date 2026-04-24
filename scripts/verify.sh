@@ -25,7 +25,7 @@ check "Git Bash"     "command -v bash"
 check "Python 3.12+" "python --version | grep -E '3\.1[2-9]|3\.[2-9][0-9]'"
 check "Claude Code"  "command -v claude"
 check "uv"           "command -v uv"
-check "gh"           "command -v gh"
+check "az"           "command -v az"
 
 # personal baseline
 check "Personal CLAUDE.md" "test -f $CLAUDE_DIR/CLAUDE.md"
@@ -38,10 +38,10 @@ check "Template CLAUDE.md" "test -f $BASELINE_DIR/template/.claude/CLAUDE.md"
 
 # agent count (target: 13)
 AGENT_COUNT=$(ls "$BASELINE_DIR/template/.claude/agents"/*.md 2>/dev/null | wc -l | tr -d ' ')
-if [ "$AGENT_COUNT" -ge 13 ]; then
+if [ "$AGENT_COUNT" -ge 12 ]; then
     echo "  [ok] Agents: $AGENT_COUNT found"
 else
-    echo "  [X]  Agents: $AGENT_COUNT found (expected 13)"
+    echo "  [X]  Agents: $AGENT_COUNT found (expected 12)"
     FAIL=1
 fi
 
@@ -54,12 +54,12 @@ else
     FAIL=1
 fi
 
-# hook count (target: 7 — auto-invoke-router + 5 safety + trigger-rules.yml)
+# hook count (target: 8 — auto-invoke-router + 5 safety + trigger-rules.yml + 2 validators)
 HOOK_COUNT=$(ls "$BASELINE_DIR/template/.claude/hooks"/* 2>/dev/null | wc -l | tr -d ' ')
-if [ "$HOOK_COUNT" -ge 7 ]; then
+if [ "$HOOK_COUNT" -ge 8 ]; then
     echo "  [ok] Hooks: $HOOK_COUNT found"
 else
-    echo "  [X]  Hooks: $HOOK_COUNT found (expected 7)"
+    echo "  [X]  Hooks: $HOOK_COUNT found (expected 8)"
     FAIL=1
 fi
 
@@ -73,7 +73,7 @@ else
 fi
 
 # scaffold template sanity
-for required in pyproject.toml Dockerfile .github/workflows/ci.yml .pre-commit-config.yaml \
+for required in pyproject.toml Dockerfile azure-pipelines.yml .pre-commit-config.yaml \
                 src/app.py src/main.py src/settings.py src/db.py src/errors.py \
                 tests/conftest.py tests/test_smoke.py \
                 alembic.ini alembic/env.py .env.example .gitignore ; do

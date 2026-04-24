@@ -69,7 +69,7 @@ uv run alembic downgrade -1
 uv run alembic history
 ```
 
-## Git + GitHub
+## Git + Azure DevOps
 
 ```bash
 # New feature branch
@@ -85,13 +85,13 @@ git commit -m "chore: bump fastapi to 0.116"
 
 # Push and open PR
 git push -u origin HEAD
-gh pr create --fill
+az repos pr create --title "feat: <description>" --target-branch main --open
 
-# Check CI status
-gh pr checks
+# Check CI / PR status
+az repos pr list --status active
 
-# Merge when CI green + approved
-gh pr merge --squash
+# Complete PR when CI green + approved
+az repos pr update --id <pr-id> --status completed --merge-strategy squash
 ```
 
 ## Docker

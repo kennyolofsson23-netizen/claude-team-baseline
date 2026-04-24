@@ -26,7 +26,7 @@ need() {
 
 FAIL=0
 need git    || FAIL=1
-need gh     || FAIL=1
+need az     || FAIL=1
 need python || FAIL=1
 need claude || FAIL=1
 need uv     || FAIL=1

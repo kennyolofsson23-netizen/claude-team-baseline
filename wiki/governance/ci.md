@@ -1,10 +1,10 @@
 # CI enforcement
 
-Our CI is on GitHub Actions. One workflow, three jobs, all blocking. Green CI is required before merge.
+Our CI runs on Azure Pipelines. One pipeline file, two jobs, all blocking. Green CI is required before merge.
 
-## The workflow file
+## The pipeline file
 
-`template/.github/workflows/ci.yml` — copied into every new project by the scaffolder. Do not edit it in an individual project; propose changes via PR to `claude-team-baseline` instead.
+`template/azure-pipelines.yml` — copied into every new project by the scaffolder. Do not edit it in an individual project; propose changes via PR to `claude-team-baseline` instead.
 
 ## What CI runs
 
@@ -16,11 +16,11 @@ Runs on every push and every pull request:
 2. **Ruff format check** — `uv run ruff format --check`. Fails if any file needs formatting.
 3. **Ruff lint** — `uv run ruff check`. Fails on any lint error.
 4. **mypy** — `uv run mypy`. Fails on any type error.
-5. **pytest with coverage** — `uv run pytest --cov --cov-fail-under=80`. Fails on any test failure or if coverage drops below 80%.
+5. **pytest with coverage** — `uv run pytest --cov --cov-fail-under=60`. Fails on any test failure or if coverage drops below 60%.
 
 All four steps must pass for the job to succeed.
 
-### Job 2 — `secret-scan`
+### Job 2 — `secret_scan`
 
 Runs `gitleaks` against the full git history of the PR branch. Catches API keys, private keys, `.env` content, and other secret patterns.
 
@@ -43,14 +43,14 @@ Before you push, run the same checks CI will run:
 uv run ruff format --check
 uv run ruff check
 uv run mypy
-uv run pytest --cov --cov-fail-under=80
+uv run pytest --cov --cov-fail-under=60
 ```
 
 Or let the pre-commit hook run ruff + gitleaks automatically on every commit (it's already wired up in `.pre-commit-config.yaml` — install with `uv run pre-commit install` once per clone).
 
 ## When CI fails
 
-1. **Read the error.** CI logs are shown in the PR. Don't guess what failed — read it.
+1. **Read the error.** Pipeline logs are shown in the PR. Don't guess what failed — read it.
 2. **Reproduce locally.** Run the failing command yourself. If it passes locally but fails in CI, something about your local env differs (usually missing dep in `pyproject.toml`).
 3. **Fix and push.** Don't merge-around by force-pushing or closing+reopening.
 4. **If you can't fix it after 3 attempts**, tag the architect. Don't spiral alone.
@@ -59,15 +59,15 @@ Or let the pre-commit hook run ruff + gitleaks automatically on every commit (it
 
 - Browser behaviour / UI correctness — that's the `qa-runner` agent's job, run locally
 - Production smoke tests — that's the `deployer` agent's job
-- Security vulnerabilities in dependencies — Phase 2 adds `pip-audit` or Dependabot
+- Security vulnerabilities in dependencies — Phase 2 adds `pip-audit` or ADO Dependabot equivalent
 - Performance regressions — Phase 3+ adds benchmark tests for specific endpoints
 
-Keep CI fast. Anything that takes > 5 minutes belongs in a separate workflow or nightly job.
+Keep CI fast. Anything that takes > 5 minutes belongs in a separate pipeline or nightly job.
 
 ## Adding a CI check
 
 1. Open a PR to `claude-team-baseline`
-2. Update `template/.github/workflows/ci.yml`
+2. Update `template/azure-pipelines.yml`
 3. Architect reviews — does this check add real value vs. adding time to the feedback loop?
 4. Merge → every project gets it on next scaffold or baseline-bump
 

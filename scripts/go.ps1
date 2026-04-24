@@ -2,7 +2,9 @@
 #
 # Intended usage (paste into PowerShell as Administrator):
 #
-#   irm https://raw.githubusercontent.com/<YOUR-GH-USER>/claude-team-baseline/main/scripts/go.ps1 | iex
+#   $pat = "<YOUR-ADO-PAT>"
+#   $headers = @{ Authorization = "Basic " + [Convert]::ToBase64String([Text.Encoding]::ASCII.GetBytes(":$pat")) }
+#   irm -Uri "https://dev.azure.com/<YOUR-ADO-ORG>/<YOUR-ADO-PROJECT>/_apis/git/repositories/claude-team-baseline/items?path=/scripts/go.ps1&api-version=7.0&download=true" -Headers $headers | iex
 #
 # Idempotent. Safe to re-run after a reboot.
 
@@ -12,7 +14,7 @@ $ProgressPreference    = "SilentlyContinue"
 # ---------- config ----------
 # Default repo URL — when the Enterprise repo exists, change this line or override
 # by setting $env:CTB_REPO_URL before running.
-$DefaultRepoUrl = "https://github.com/kennyolofsson23-netizen/claude-team-baseline.git"
+$DefaultRepoUrl = "https://dev.azure.com/<YOUR-ADO-ORG>/<YOUR-ADO-PROJECT>/_git/claude-team-baseline"
 $RepoUrl = if ($env:CTB_REPO_URL) { $env:CTB_REPO_URL.Trim() } else { $DefaultRepoUrl }
 Write-Host ("Using repo: {0}" -f $RepoUrl) -ForegroundColor Gray
 $WorkDir = Join-Path $env:USERPROFILE "work"
@@ -35,7 +37,7 @@ Step 1 "Installing prerequisites via winget"
 
 $packages = @(
     @{ Id = "Git.Git";                                 Label = "Git" }
-    @{ Id = "GitHub.cli";                              Label = "GitHub CLI" }
+    @{ Id = "Microsoft.AzureCLI";                      Label = "Azure CLI" }
     @{ Id = "OpenJS.NodeJS.LTS";                       Label = "Node.js LTS (for Claude CLI)" }
     @{ Id = "Python.Python.3.12";                      Label = "Python 3.12" }
     @{ Id = "Anthropic.ClaudeCode";                    Label = "Claude Code" }
@@ -65,15 +67,23 @@ $env:PYTHONUTF8       = "1"
 $env:PYTHONIOENCODING = "utf-8"
 Ok "done"
 
-# ---------- step 3: optional github authentication ----------
-Step 3 "GitHub authentication (optional — skipping if not logged in)"
-$authState = gh auth status 2>&1
+# ---------- step 3: azure devops authentication ----------
+Step 3 "Azure DevOps authentication"
+$authState = az account show 2>&1
 if ($LASTEXITCODE -ne 0) {
-    Warn "gh not authenticated — SKIPPING."
-    Write-Host "  The repo is public, so `git clone` works without a login."
-    Write-Host "  Authenticate later with `gh auth login` once 2FA is sorted."
+    Write-Host "  Launching Azure login (browser popup)..."
+    az login | Out-Null
+}
+$extCheck = az extension list --query "[?name=='azure-devops']" 2>&1
+if ($extCheck -notmatch "azure-devops") {
+    Write-Host "  Installing Azure DevOps CLI extension..."
+    az extension add --name azure-devops | Out-Null
+}
+$authState2 = az account show 2>&1
+if ($LASTEXITCODE -ne 0) {
+    Warn "Azure login failed — check browser popup and retry."
 } else {
-    Ok "gh already authenticated"
+    Ok "Azure CLI authenticated and azure-devops extension ready"
 }
 
 # ---------- step 4: clone or pull the baseline ----------
@@ -88,7 +98,7 @@ if (Test-Path $BaselinePath) {
 } else {
     Write-Host ("  cloning {0} -> {1}" -f $RepoUrl, $BaselinePath)
     git clone $RepoUrl $BaselinePath
-    if (-not (Test-Path $BaselinePath)) { Fail "Clone failed. Check repo URL and gh auth."; exit 1 }
+    if (-not (Test-Path $BaselinePath)) { Fail "Clone failed. Check repo URL and Azure DevOps auth (run: az login)."; exit 1 }
     Ok "cloned"
 }
 

@@ -38,14 +38,20 @@ Delete the pair you don't want. **Do not leave both active** — Docker only res
 Default assumption: **Azure App Service for Containers**. If you're MSSQL-first on Azure this is the sensible place. Swap if your team uses something different.
 
 ```bash
-# From the deployer agent — it knows how to run this for you:
+# From the deployer agent — it knows how to run this for you.
+# Naming follows Azure CAF:
+#   APP_NAME = app-<project>-<env>   e.g. app-invoice-tool-prod
+#   RG_NAME  = rg-<project>-<env>    e.g. rg-invoice-tool-prod
+# Both are set in .deploy/config.env in each project repo.
+
+source .deploy/config.env
 az webapp config container set \
-  --name "<APP_NAME>" \
-  --resource-group "<RG_NAME>" \
+  --name "$APP_NAME" \
+  --resource-group "$RG_NAME" \
   --docker-custom-image-name "<registry.company.internal>/<project>:<sha>" \
   --docker-registry-server-url "https://<registry.company.internal>"
 
-az webapp restart --name "<APP_NAME>" --resource-group "<RG_NAME>"
+az webapp restart --name "$APP_NAME" --resource-group "$RG_NAME"
 ```
 
 For any other target (Kubernetes, AWS ECS, bare VM), update `ARCHITECTURE.md` and the `deployer` agent will follow that section.
@@ -55,7 +61,7 @@ For any other target (Kubernetes, AWS ECS, bare VM), update `ARCHITECTURE.md` an
 Every deploy is followed by a smoke test before declaring success:
 
 ```bash
-URL="https://<your-app>.azurewebsites.net"
+URL="https://app-<project>-<env>.azurewebsites.net"  # matches APP_NAME in .deploy/config.env
 for i in {1..12}; do
   if curl -fsS "$URL/healthz" > /dev/null; then echo "OK"; break; fi
   sleep 5

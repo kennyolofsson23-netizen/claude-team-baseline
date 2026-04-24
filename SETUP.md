@@ -5,13 +5,15 @@
 ## The one-liner (Windows, PowerShell as Administrator)
 
 ```powershell
-irm https://raw.githubusercontent.com/<YOUR-GITHUB-USERNAME>/claude-team-baseline/main/scripts/go.ps1 | iex
+$pat = "<YOUR-ADO-PAT>"
+$headers = @{ Authorization = "Basic " + [Convert]::ToBase64String([Text.Encoding]::ASCII.GetBytes(":$pat")) }
+irm -Uri "https://dev.azure.com/<YOUR-ADO-ORG>/<YOUR-ADO-PROJECT>/_apis/git/repositories/claude-team-baseline/items?path=/scripts/go.ps1&api-version=7.0&download=true" -Headers $headers | iex
 ```
 
-Replace `<YOUR-GITHUB-USERNAME>`. The script:
+Replace `<YOUR-ADO-ORG>`, `<YOUR-ADO-PROJECT>`, and `<YOUR-ADO-PAT>` (a Personal Access Token with Code Read scope). The script:
 
-1. Installs Git, GitHub CLI, Node.js, Python 3.12, Claude Code, uv, Docker Desktop, VS Code, and the MSSQL ODBC driver (via winget, ~10 minutes)
-2. Pops a browser for GitHub login
+1. Installs Git, Azure CLI, Node.js, Python 3.12, Claude Code, uv, Docker Desktop, VS Code, and the MSSQL ODBC driver (via winget, ~10 minutes)
+2. Pops a browser for Azure login (`az login`)
 3. Pops a browser for Claude login
 4. Clones this repo to `~/work/claude-team-baseline`
 5. Copies the personal Claude config to `~/.claude/`
@@ -20,22 +22,21 @@ Replace `<YOUR-GITHUB-USERNAME>`. The script:
 
 If it tells you to reboot (Docker usually does), reboot and re-run the same one-liner — it's idempotent.
 
-**Requirement**: the GitHub repo must be accessible. Easiest: make your personal fork public. If private, see the 3-step path below.
-
 ---
 
-## 3-step path (if repo is private)
+## 3-step path (manual)
 
 ```powershell
-# Step 1 (PowerShell as Admin) — install Git + GitHub CLI
+# Step 1 (PowerShell as Admin) — install Git + Azure CLI
 winget install -e --id Git.Git             --silent
-winget install -e --id GitHub.cli          --silent
+winget install -e --id Microsoft.AzureCLI --silent
 
 # Close PowerShell, reopen it as Admin
 
 # Step 2 — authenticate and clone
-gh auth login
-gh repo clone <YOUR-GITHUB-USERNAME>/claude-team-baseline "$env:USERPROFILE\work\claude-team-baseline"
+az login
+az extension add --name azure-devops
+git clone https://dev.azure.com/<YOUR-ADO-ORG>/<YOUR-ADO-PROJECT>/_git/claude-team-baseline "$env:USERPROFILE\work\claude-team-baseline"
 
 # Step 3 — run bootstrap (installs everything else)
 cd "$env:USERPROFILE\work\claude-team-baseline"
@@ -75,7 +76,7 @@ If Claude plans first, writes a test, implements, runs tests, and shows you the 
 
 Once you're happy:
 
-1. Tell each teammate the one-liner (with your GitHub username in the URL)
+1. Tell each teammate the one-liner (with your ADO org, project, and a PAT in the URL)
 2. They run it on their work PC
 3. They open the wiki, read `home.md`, and start
 

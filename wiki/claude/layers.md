@@ -33,7 +33,7 @@ Today, Phase 1, we do not have this layer active. An example file is in `managed
 
 - `CLAUDE.md` — team rules, written in Claude-as-coach voice
 - `settings.json` — project-scoped hooks, permissions, MCP servers
-- `agents/` — the 13 agents (architect, coder, tester, reviewer, deployer, etc.)
+- `agents/` — the 12 agents (architect, coder, tester, reviewer, deployer, etc.)
 - `skills/` — the 4 stack skills (python, streamlit, fastapi, mssql best-practices)
 - `rules/` — path-scoped rules (auto-load when matching files are touched)
 - `hooks/` — `auto-invoke-router.py`, safety hooks, secret scanners

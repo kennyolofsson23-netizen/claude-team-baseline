@@ -9,7 +9,7 @@ This document tracks how the team setup evolves as we grow. Phase 1 is what's bu
 **Goal**: Every developer on the team shares the same Claude configuration via a cloned repo + one install script.
 
 **Done**:
-- `claude-team-baseline` repo with `.claude/` template, 12 agents, 25 skills, 6 hooks, 7 rules
+- `claude-team-baseline` repo with `.claude/` template, 12 agents, 4 skills, 8 hooks, 7 rules
 - Auto-invoke router hook (`auto-invoke-router.py`) fires agents/skills on prompt keywords — no manual selection
 - Streamlit + SQLAlchemy + MSSQL scaffold with running smoke test
 - `scripts/install.sh` and `scripts/install.ps1` bootstrap a fresh Windows PC
@@ -92,7 +92,7 @@ Phase 1 is appropriate for **a small team (≤8) where trust is high and the arc
 - **Custom MCP servers for our domain**: premature. Use Context7 + the standard set until we have a repeated pain point that a custom MCP would solve.
 - **Opus usage policy**: phase 2 pins Sonnet default. We add Opus escalation only when we see real tasks where Sonnet underperforms.
 - **A public "awesome-our-stack" skill library**: nice to have, but we are not a platform team — we are a product team using Claude. Build only what we need.
-- **Claude CI agents** (running Claude in GitHub Actions on PRs): valuable later, complex to secure now. Phase 3 or 4.
+- **Claude CI agents** (running Claude in Azure Pipelines on PRs): valuable later, complex to secure now. Phase 3 or 4.
 
 ---
 

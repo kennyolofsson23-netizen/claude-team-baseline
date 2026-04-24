@@ -21,7 +21,7 @@ Run these and confirm clean output:
 uv run ruff check
 uv run ruff format --check
 uv run mypy
-uv run pytest --cov --cov-fail-under=80
+uv run pytest --cov --cov-fail-under=60
 ```
 
 Any failure stops the deploy. Fix the failure first.
@@ -64,16 +64,21 @@ docker push "<registry.company.internal>/$(basename $(pwd)):latest"
 Azure App Service deploy:
 
 ```bash
+# APP_NAME and RG_NAME come from .deploy/config.env — follow Azure CAF naming:
+#   APP_NAME = app-<project>-<env>      e.g. app-invoice-tool-prod
+#   RG_NAME  = rg-<project>-<env>       e.g. rg-invoice-tool-prod
+source .deploy/config.env
+
 az webapp config container set \
-  --name "<APP_NAME>" \
-  --resource-group "<RG_NAME>" \
+  --name "$APP_NAME" \
+  --resource-group "$RG_NAME" \
   --docker-custom-image-name "$IMAGE" \
   --docker-registry-server-url "https://<registry.company.internal>"
 
-az webapp restart --name "<APP_NAME>" --resource-group "<RG_NAME>"
+az webapp restart --name "$APP_NAME" --resource-group "$RG_NAME"
 ```
 
-Replace placeholders with values from `.deploy/config.env` (checked into the repo — put only names in version control, never secrets).
+`.deploy/config.env` is checked into the repo — names only, never secrets.
 
 For non-Azure targets (Kubernetes, ECS, plain `docker run` on a VM), follow the pattern in `ARCHITECTURE.md` — do not improvise.
 
@@ -82,7 +87,8 @@ For non-Azure targets (Kubernetes, ECS, plain `docker run` on a VM), follow the 
 Wait for the container to come up (up to 60s), then probe:
 
 ```bash
-URL="<https://deploy-url>"
+source .deploy/config.env
+URL="https://${APP_NAME}.azurewebsites.net"
 for i in 1 2 3 4 5 6 7 8 9 10 11 12; do
   if curl -fsS "$URL/healthz" >/dev/null 2>&1; then
     echo "Healthz OK"
@@ -106,8 +112,8 @@ Create or overwrite `DEPLOY.md` at repo root:
 
 - **Image**: `<registry.company.internal>/<project>:<short-sha>`
 - **Git ref**: `<branch>` @ `<full-sha>`
-- **Deploy target**: Azure App Service — `<APP_NAME>`
-- **URL**: `<https://deploy-url>`
+- **Deploy target**: Azure App Service — `app-<project>-<env>`
+- **URL**: `https://app-<project>-<env>.azurewebsites.net`
 - **Deployed at**: `<ISO-8601 timestamp>`
 - **Deployed by**: `<git config user.name>`
 

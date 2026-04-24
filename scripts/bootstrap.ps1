@@ -35,7 +35,7 @@ Step 1 "Installing prerequisites via winget"
 
 $packages = @(
     @{ Id = "Git.Git";                                    Label = "Git"                        },
-    @{ Id = "GitHub.cli";                                 Label = "GitHub CLI"                 },
+    @{ Id = "Microsoft.AzureCLI";                         Label = "Azure CLI"                  },
     @{ Id = "OpenJS.NodeJS.LTS";                          Label = "Node.js LTS (for Claude)"   },
     @{ Id = "Python.Python.3.12";                         Label = "Python 3.12"                },
     @{ Id = "Anthropic.ClaudeCode";                       Label = "Claude Code"                },
@@ -96,7 +96,7 @@ if (Test-Path $BaselinePath) {
     Write-Host ("  Cloning {0} -> {1}" -f $RepoUrl, $BaselinePath)
     & git clone $RepoUrl $BaselinePath
     if (-not (Test-Path $BaselinePath)) {
-        Fail "Clone failed. Check the repo URL and your GitHub auth (run: gh auth login)."
+        Fail "Clone failed. Check the repo URL and your Azure DevOps auth (run: az login)."
         exit 1
     }
     Ok "Cloned"
@@ -121,7 +121,8 @@ Step 6 "Next steps"
 Write-Host ""
 Write-Host "  1. If Docker / Claude did not register in PATH, REBOOT and re-run this script." -ForegroundColor White
 Write-Host "  2. Authenticate:"                                                                   -ForegroundColor White
-Write-Host "       gh auth login"                                                                 -ForegroundColor Gray
+Write-Host "       az login                              # browser popup for Azure login"         -ForegroundColor Gray
+Write-Host "       az extension add --name azure-devops # install ADO CLI extension"             -ForegroundColor Gray
 Write-Host "       claude          # browser popup for Claude login"                              -ForegroundColor Gray
 Write-Host "  3. Scaffold your first project:"                                                    -ForegroundColor White
 Write-Host ("       bash {0}\scripts\scaffold-project.sh {1}\hello-claude" -f $BaselinePath, $WorkDir) -ForegroundColor Gray

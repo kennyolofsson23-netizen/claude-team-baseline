@@ -92,14 +92,14 @@ Again, watch the rhythm:
 
 Claude will ask you to confirm the plan before writing code. Read it. Push back if something looks off.
 
-## Step 7 — Push to GitHub
+## Step 7 — Push to Azure DevOps
 
 ```bash
-git remote add origin https://github.com/<your-org>/hello-claude.git
+git remote add origin https://dev.azure.com/<YOUR-ADO-ORG>/<YOUR-ADO-PROJECT>/_git/hello-claude
 git push -u origin main
 ```
 
-Then open a PR with any subsequent changes — CI runs automatically, and the `code-reviewer` agent can review the diff in a session.
+Then open a PR with any subsequent changes — CI runs automatically via Azure Pipelines, and the `code-reviewer` agent can review the diff in a session.
 
 ## Common first-day mistakes
 

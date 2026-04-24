@@ -9,7 +9,7 @@ This document tracks how the team setup evolves as we grow. Phase 1 is what's bu
 **Goal**: Every developer on the team shares the same Claude configuration via a cloned repo + one install script.
 
 **Done**:
-- `claude-team-baseline` repo with `.claude/` template, 12 agents, 25 skills, 6 hooks, 7 rules
+- `claude-team-baseline` repo with `.claude/` template, 12 agents, 4 skills, 8 hooks, 7 rules
 - Auto-invoke router hook (`auto-invoke-router.py`) fires agents/skills on prompt keywords — no manual selection
 - Streamlit + SQLAlchemy + MSSQL scaffold with running smoke test
 - `scripts/install.sh` and `scripts/install.ps1` bootstrap a fresh Windows PC

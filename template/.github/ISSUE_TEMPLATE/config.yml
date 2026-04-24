@@ -1,8 +1,0 @@
-blank_issues_enabled: true
-contact_links:
-  - name: Ask in Teams
-    url: https://teams.microsoft.com
-    about: For quick questions that do not need a tracked issue, use the team Teams channel.
-  - name: Incident — use Ivanti
-    url: https://your-ivanti-url.internal
-    about: Production incidents are tracked in Ivanti Service Manager, not in GitHub issues.
