@@ -54,12 +54,12 @@ else
     FAIL=1
 fi
 
-# hook count (target: 8 — auto-invoke-router + 5 safety + trigger-rules.yml + 2 validators)
+# hook count (target: 9 — auto-invoke-router + 5 safety + trigger-rules.yml + 2 validators + remind-verification)
 HOOK_COUNT=$(ls "$BASELINE_DIR/template/.claude/hooks"/* 2>/dev/null | wc -l | tr -d ' ')
-if [ "$HOOK_COUNT" -ge 8 ]; then
+if [ "$HOOK_COUNT" -ge 9 ]; then
     echo "  [ok] Hooks: $HOOK_COUNT found"
 else
-    echo "  [X]  Hooks: $HOOK_COUNT found (expected 8)"
+    echo "  [X]  Hooks: $HOOK_COUNT found (expected 9)"
     FAIL=1
 fi
 

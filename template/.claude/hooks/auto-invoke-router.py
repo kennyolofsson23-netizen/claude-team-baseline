@@ -19,74 +19,23 @@ prompt Claude sees.
 from __future__ import annotations
 
 import json
-import re
 import sys
 from pathlib import Path
+
+import yaml
 
 
 RULES_PATH = Path(__file__).parent / "trigger-rules.yml"
 
 
 def load_rules() -> list[dict]:
-    """Parse the YAML rules file with a minimal line-based parser.
-
-    We avoid requiring PyYAML at runtime. Expected structure:
-
-        - name: writing-plans
-          match: ["plan", "design", "architecture"]
-          inject: |
-            AUTO-INVOKE: writing-plans skill + architect agent.
-            Produce a plan before code. ...
-    """
     if not RULES_PATH.exists():
         return []
-
-    text = RULES_PATH.read_text(encoding="utf-8")
-    rules: list[dict] = []
-    current: dict = {}
-    capturing_inject = False
-    inject_lines: list[str] = []
-
-    for raw in text.splitlines():
-        line = raw.rstrip()
-
-        if line.startswith("- name:"):
-            if current:
-                if capturing_inject:
-                    current["inject"] = "\n".join(inject_lines).strip()
-                rules.append(current)
-            current = {"name": line.split(":", 1)[1].strip()}
-            capturing_inject = False
-            inject_lines = []
-            continue
-
-        if capturing_inject:
-            if line and not line.startswith("  "):
-                current["inject"] = "\n".join(inject_lines).strip()
-                capturing_inject = False
-                inject_lines = []
-            else:
-                inject_lines.append(line.lstrip())
-                continue
-
-        if line.strip().startswith("match:"):
-            # e.g.  match: ["plan", "design"]
-            rhs = line.split(":", 1)[1].strip()
-            matches = re.findall(r'"([^"]*)"', rhs)
-            current["match"] = [m.lower() for m in matches]
-            continue
-
-        if line.strip().startswith("inject:"):
-            capturing_inject = True
-            inject_lines = []
-            continue
-
-    if current:
-        if capturing_inject:
-            current["inject"] = "\n".join(inject_lines).strip()
-        rules.append(current)
-
-    return [r for r in rules if "match" in r and "inject" in r]
+    raw = yaml.safe_load(RULES_PATH.read_text(encoding="utf-8")) or []
+    return [
+        r for r in raw
+        if isinstance(r, dict) and "match" in r and "inject" in r
+    ]
 
 
 def main() -> int:
@@ -99,11 +48,16 @@ def main() -> int:
     if not prompt.strip():
         return 0
 
-    rules = load_rules()
+    try:
+        rules = load_rules()
+    except Exception:
+        return 0
+
     injected: list[str] = []
 
     for rule in rules:
-        for kw in rule.get("match", []):
+        keywords = [str(k).lower() for k in rule.get("match", [])]
+        for kw in keywords:
             if kw and kw in prompt:
                 name = rule["name"]
                 body = rule["inject"]

@@ -63,7 +63,7 @@ This is the living documentation for our team's Claude Code setup. If you're new
 
 <span class="pill">12 agents</span>
 <span class="pill">4 stack skills</span>
-<span class="pill">8 hooks</span>
+<span class="pill">9 hooks</span>
 <span class="pill">7 rules</span>
 <span class="pill pill-outline">Python 3.12</span>
 <span class="pill pill-outline">Streamlit · FastAPI</span>

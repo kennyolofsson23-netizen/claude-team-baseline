@@ -9,30 +9,35 @@
     "UserPromptSubmit": [
       {
         "command": "python $CLAUDE_PROJECT_DIR/.claude/hooks/auto-invoke-router.py",
-        "timeout_ms": 3000
+        "timeout": 3
       }
     ],
     "PreToolUse": [
       {
         "matcher": "Bash",
         "command": "python $CLAUDE_PROJECT_DIR/.claude/hooks/block-dangerous.py",
-        "timeout_ms": 3000
+        "timeout": 3
+      },
+      {
+        "matcher": "Bash",
+        "command": "python $CLAUDE_PROJECT_DIR/.claude/hooks/pre-commit-secrets.py",
+        "timeout": 5
       },
       {
         "matcher": "Write|Edit",
         "command": "python $CLAUDE_PROJECT_DIR/.claude/hooks/block-secrets.py",
-        "timeout_ms": 3000
+        "timeout": 3
       },
       {
         "matcher": "Read|Edit|Grep|Write",
         "command": "python $CLAUDE_PROJECT_DIR/.claude/hooks/data-classification-gate.py",
-        "timeout_ms": 3000
+        "timeout": 3
       }
     ],
-    "PreCommit": [
+    "Stop": [
       {
-        "command": "python $CLAUDE_PROJECT_DIR/.claude/hooks/pre-commit-secrets.py",
-        "timeout_ms": 5000
+        "command": "python $CLAUDE_PROJECT_DIR/.claude/hooks/remind-verification.py",
+        "timeout": 3
       }
     ]
   },
