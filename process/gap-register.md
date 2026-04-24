@@ -20,12 +20,6 @@ A resolved gap leaves the register and moves to a proper ADR or into one of the 
 
 ## Open gaps
 
-### Communications channel for alerts + support
-- **Status**: open
-- **Owner**: Kenny
-- **Why it matters**: Every runbook says "alert goes to channel X" and every support doc says "ask in channel Y" — we need to pick Teams channel(s) or email address(es).
-- **Current workaround**: Ad-hoc — people DM each other.
-- **Needed by**: First production app launch.
 
 ### Ivanti integration depth
 - **Status**: open

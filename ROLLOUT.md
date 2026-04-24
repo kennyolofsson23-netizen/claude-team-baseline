@@ -37,14 +37,6 @@ Work top to bottom. Do not skip. Do not release the repo URL until this is compl
 
 ---
 
-## BLOCKER — Communications
-
-- [ ] **Pick a Teams channel** for alerts + support (closes gap-register entry)
-  - Update all runbook templates with the channel name
-  - Update `wiki/process/maintenance/incident-response.md`
-
----
-
 ## BLOCKER — Validation
 
 - [ ] **Test the full install on one clean Windows PC** (not your dev machine)
