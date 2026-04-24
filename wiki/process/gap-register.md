@@ -56,6 +56,28 @@ A resolved gap leaves the register and moves to a proper ADR or into one of the 
 - **Proposed first step**: Pick a small internal tool, run it end-to-end through the baseline.
 - **Needed by**: Asap — until then this is all theory.
 
+### MSSQL MCP — wire credentials
+- **Status**: framework-ready (via `.mcp.json` pattern), credentials not wired
+- **Owner**: Kenny + IT
+- **Why it matters**: MSSQL MCP lets Claude inspect schema and run SELECTs against a test DB, massively speeding up debugging and feature work. Needs Key Vault + managed identity wiring.
+- **Current workaround**: Claude reads SQLAlchemy models; cannot query the DB directly.
+- **Needed by**: Once we have a test MSSQL DB that's safe to query.
+
+### Error-tracking MCP — choose one
+- **Status**: open
+- **Owner**: ARB
+- **Why it matters**: Sentry MCP and Azure Application Insights both give Claude access to error data. Pick one; wire one; stop there.
+- **Current workaround**: Paste tracebacks into chat.
+- **Needed by**: First production incident.
+
+### Superpowers plugin — install or inline?
+- **Status**: open, my recommendation: install as plugin
+- **Owner**: Kenny
+- **Why it matters**: Ships 14 discipline skills (TDD, planning, debugging, code review). Currently baseline relies on CLAUDE.md + agents to enforce the same behaviours — works but less explicit than having the skills themselves.
+- **Current workaround**: CLAUDE.md hard-codes the key rules.
+- **Proposed**: Add `claude plugin install superpowers` to SETUP.md after bootstrap.
+- **Needed by**: Before team rollout ideally, but not blocking.
+
 ### On-call rotation
 - **Status**: parked
 - **Why it matters**: Once we have production apps, someone needs to be the first responder when alerts fire.
