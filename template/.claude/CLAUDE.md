@@ -55,6 +55,14 @@ If the human asks to use something outside this list (React, MongoDB, raw SQL, a
 - If the human asks about a domain concept (business rule, regulation, industry term) you have not researched THIS session, launch a research agent first.
 - Pattern-matching from training data is guessing. Research, then explain, then cite.
 
+## Data Classification — check before processing
+If you are about to read, analyse, or include in your response data that looks like regulated data (personal data, financial records, health info, confidential strategy), STOP and:
+1. Check whether the file is covered by a rule in `.claude/data-classification.yml`.
+2. If covered and allowed — proceed.
+3. If covered and denied — the `data-classification-gate.py` hook will block the read. Tell the user why and suggest the proper channel (sandboxed tool, ARB reclassification).
+4. If not covered and the file obviously contains regulated patterns (personnummer, SSN, salary columns, credit cards) — proceed cautiously, **never include the raw values in your response**, and suggest that ARB add a classification rule.
+5. Default posture is allow. The system starts empty; we grow it as real data classes appear.
+
 ## Subagent Strategy (context survival)
 - Any skill invocation that injects >1K tokens of instructions → delegate to a subagent
 - Any file read >500 lines → delegate to a subagent and ask it to extract what you need

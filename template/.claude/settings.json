@@ -19,8 +19,13 @@
         "timeout_ms": 3000
       },
       {
-        "matcher": "Bash",
+        "matcher": "Write|Edit",
         "command": "python $CLAUDE_PROJECT_DIR/.claude/hooks/block-secrets.py",
+        "timeout_ms": 3000
+      },
+      {
+        "matcher": "Read|Edit|Grep|Write",
+        "command": "python $CLAUDE_PROJECT_DIR/.claude/hooks/data-classification-gate.py",
         "timeout_ms": 3000
       }
     ],

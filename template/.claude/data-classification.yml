@@ -1,0 +1,40 @@
+# Data classification for this project.
+#
+# Controls whether Claude is allowed to Read/Edit/Grep files in this repo.
+# The data-classification-gate.py hook reads this file and enforces the rules.
+#
+# See process/data-classification/README.md for the full system.
+
+# Default posture — what happens when no rule matches a file path.
+# Our team default is allow-by-default (we do not yet handle regulated data).
+default_class: employee-standard
+default_claude_access: true
+
+# Per-path rules. Checked in order; first match wins.
+# Starter list is empty. Add entries via ARB-approved PR as real data classes appear.
+#
+# Example rule (do not enable until you actually have this data):
+#
+# rules:
+#   - paths: ["data/finance/**", "**/payroll*.csv", "**/salary*.xlsx"]
+#     class: restricted-finance
+#     claude_access: false
+#     rationale: "SOX / audit concerns — Claude must not process"
+#
+#   - paths: ["data/customer-pii/**"]
+#     class: restricted-pii
+#     claude_access: false
+#     rationale: "GDPR special category"
+
+rules: []
+
+# Heuristic settings — the hook also looks for patterns inside the file content.
+# Phase 1: warn and log (do not block). Review warnings to calibrate before moving to block.
+heuristics:
+  enabled: true
+  action: warn-and-log     # warn-and-log | block
+  patterns:
+    - personnummer-se      # Swedish personnummer YYYYMMDD-XXXX or YYMMDD-XXXX
+    - credit-card-luhn
+    - ssn-us
+    - header-pii-column    # csv/excel column names like ssn, pnr, salary

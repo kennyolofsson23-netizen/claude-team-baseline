@@ -1,0 +1,51 @@
+name: Gap — something we haven't sorted yet
+description: Add an entry to the team gap register. Anyone can file.
+title: "[Gap] <short title>"
+labels: ["gap", "needs-triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        A gap is "something we've noticed is missing or undecided". Not a bug, not a feature — something that should exist or be decided, but isn't yet.
+        The ARB reviews new gaps at each cadence meeting.
+
+  - type: textarea
+    id: gap
+    attributes:
+      label: The gap
+      description: What is missing or undecided? One or two sentences.
+      placeholder: "We have no convention for labelling internal tool URLs. Some are .internal.company.com, others are azurewebsites.net default names."
+    validations:
+      required: true
+
+  - type: textarea
+    id: why
+    attributes:
+      label: Why it matters
+      description: What goes wrong if this stays unresolved?
+    validations:
+      required: true
+
+  - type: textarea
+    id: workaround
+    attributes:
+      label: Current workaround (if any)
+      description: How are people coping with this right now?
+    validations:
+      required: false
+
+  - type: input
+    id: needed-by
+    attributes:
+      label: Needed by
+      description: When would this become blocking? Can be "before first prod app", "Q3 2026", "never — just hygiene", etc.
+    validations:
+      required: false
+
+  - type: input
+    id: owner
+    attributes:
+      label: Suggested owner
+      description: Who is best placed to resolve this? Blank if you don't know.
+    validations:
+      required: false

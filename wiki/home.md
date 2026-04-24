@@ -43,6 +43,18 @@ This is the living documentation for our team's Claude Code setup. If you're new
     <p>Phase 1 is what you're using now. Phase 2-4 is where we're heading.</p>
     <p><a href="#/roadmap.md"><strong>→ Roadmap</strong></a></p>
   </div>
+
+  <div class="card">
+    <h3>Product lifecycle + process</h3>
+    <p>How a product goes from idea to live to retired. Governance, maintenance, docs, checklists.</p>
+    <p><a href="#/process/README.md"><strong>→ Process</strong></a></p>
+  </div>
+
+  <div class="card">
+    <h3>Gap register</h3>
+    <p>Open questions and things we haven't sorted yet — the team's living TODO list.</p>
+    <p><a href="#/process/gap-register.md"><strong>→ Gaps</strong></a></p>
+  </div>
 </div>
 
 ## At a glance

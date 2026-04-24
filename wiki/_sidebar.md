@@ -25,13 +25,44 @@
   * [Rules reference](claude/rules.md)
   * [Hooks + auto-invoke](claude/hooks.md)
 
+* **Product Lifecycle**
+  * [Process overview](process/README.md)
+  * [Product brief template](process/product-lifecycle/brief-template.md)
+  * [Launch checklist](process/product-lifecycle/launch-checklist.md)
+  * [Review cadence](process/product-lifecycle/review-cadence.md)
+  * [Sunset checklist](process/product-lifecycle/sunset-checklist.md)
+
 * **Governance**
   * [Permissions & safety](governance/permissions.md)
   * [CI enforcement](governance/ci.md)
   * [Managed settings (Phase 2)](governance/managed-settings.md)
+  * [ARB](process/governance/arb.md)
+  * [Change approval matrix](process/governance/change-approval-matrix.md)
+  * [Security review triggers](process/governance/security-review-triggers.md)
+  * [Change wishes — how to propose](process/governance/change-wishes/README.md)
+  * [Data classification](process/data-classification/README.md)
 
-* **Roadmap**
+* **Maintenance**
+  * [Calendar — weekly/monthly/quarterly](process/maintenance/calendar.md)
+  * [Dependency hygiene](process/maintenance/dependency-hygiene.md)
+  * [Patch SLA (CVEs)](process/maintenance/patch-sla.md)
+  * [Backup verification](process/maintenance/backup-verification.md)
+  * [Access review](process/maintenance/access-review.md)
+  * [Incident response](process/maintenance/incident-response.md)
+
+* **Documentation templates**
+  * [ADR template](process/documentation/adr-template.md)
+  * [Runbook template](process/documentation/runbook-template.md)
+  * [Post-mortem template](process/documentation/post-mortem-template.md)
+  * [Changelog conventions](process/documentation/changelog-conventions.md)
+
+* **Productification (internal)**
+  * [Internal checklist](process/productification/internal-checklist.md)
+  * [Design system brief](process/productification/design-system-brief.md)
+
+* **Roadmap & Gaps**
   * [Phases 1-4](roadmap.md)
+  * [Gap register](process/gap-register.md)
 
 * **Cheat sheets**
   * [Common commands](reference/cheatsheet.md)
