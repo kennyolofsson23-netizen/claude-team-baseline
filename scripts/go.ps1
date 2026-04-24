@@ -10,13 +10,11 @@ $ErrorActionPreference = "Continue"
 $ProgressPreference    = "SilentlyContinue"
 
 # ---------- config ----------
-# Auto-detect the source URL if the script was invoked via irm | iex.
-# Users can override by setting $env:CTB_REPO_URL before running.
-if (-not $env:CTB_REPO_URL) {
-    # If this script was downloaded to disk with a URL context, try to derive. Otherwise fail clearly.
-    $env:CTB_REPO_URL = Read-Host "Enter your GitHub URL for claude-team-baseline (e.g. https://github.com/kenny/claude-team-baseline.git)"
-}
-$RepoUrl = $env:CTB_REPO_URL.Trim()
+# Default repo URL — when the Enterprise repo exists, change this line or override
+# by setting $env:CTB_REPO_URL before running.
+$DefaultRepoUrl = "https://github.com/kennyolofsson23-netizen/claude-team-baseline.git"
+$RepoUrl = if ($env:CTB_REPO_URL) { $env:CTB_REPO_URL.Trim() } else { $DefaultRepoUrl }
+Write-Host ("Using repo: {0}" -f $RepoUrl) -ForegroundColor Gray
 $WorkDir = Join-Path $env:USERPROFILE "work"
 $BaselinePath = Join-Path $WorkDir "claude-team-baseline"
 
