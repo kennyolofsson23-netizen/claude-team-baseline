@@ -1,0 +1,22 @@
+{
+  "//": "Project-scoped MCP servers — Claude Code prompts to trust these on first session.",
+  "//2": "Keep this list minimal; each MCP adds startup cost and potential risk.",
+  "//3": "Deferred: MSSQL MCP (needs Key Vault wiring), Sentry (only if using Sentry).",
+  "mcpServers": {
+    "context7": {
+      "command": "npx",
+      "args": ["-y", "@upstash/context7-mcp@latest"],
+      "description": "Current documentation for Python libs, FastAPI, SQLAlchemy, Streamlit, etc. Claude should NEVER code library APIs from memory — always resolve via Context7 first."
+    },
+    "playwright": {
+      "command": "npx",
+      "args": ["-y", "@playwright/mcp@latest"],
+      "description": "Browser automation for UI smoke tests. The qa-runner agent uses this to verify Streamlit / FastAPI pages load and work end-to-end."
+    },
+    "sequential-thinking": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-sequential-thinking"],
+      "description": "Step-by-step reasoning for complex architecture / debugging tasks. Used by the architect and error-detective agents."
+    }
+  }
+}
