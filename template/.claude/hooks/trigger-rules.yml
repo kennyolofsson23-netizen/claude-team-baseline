@@ -27,7 +27,7 @@
     criteria. Do not write code until the spec is approved.
 
 - name: test-driven-development
-  match: ["implement", "build a", "add a function", "write code for", "add a feature"]
+  match: ["implement", "build a", "build the", "add a function", "add a method", "write code for", "add a feature", "create a new", "make a new"]
   inject: |
     Test-first. Before any implementation: write the failing test, run it
     (confirm red), implement the minimum to pass (confirm green), refactor.
@@ -35,7 +35,7 @@
     its behavior.
 
 - name: test-writer
-  match: ["write tests", "add tests", "cover this", "test coverage"]
+  match: ["write tests", "add tests", "write a test", "add a test", "make a test", "cover this", "test coverage", "missing test", "more tests"]
   inject: |
     Spawn the `test-writer` agent. Tests live in `tests/` mirroring `src/`.
     Use pytest. Use real MSSQL for DB tests — never mock the database.

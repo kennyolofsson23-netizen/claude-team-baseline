@@ -83,7 +83,10 @@ README
 
 echo "==> Installing dependencies"
 if command -v uv >/dev/null 2>&1; then
-    uv sync || echo "  (uv sync failed — run it manually after fixing pyproject.toml)"
+    # pyodbc needs MS ODBC Driver 18 installed system-wide on Windows.
+    # If that is missing, this step fails — that is a local-dev prerequisite,
+    # see HANDOVER.md Step 1.
+    uv sync || echo "  (uv sync failed — see HANDOVER.md for ODBC driver prereq)"
 else
     echo "  [skip] uv not installed — run 'uv sync' after installing uv"
 fi

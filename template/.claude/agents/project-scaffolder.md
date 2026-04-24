@@ -40,12 +40,9 @@ You are called via `scripts/scaffold-project.sh <target-dir>` or directly by a h
    ```
    This creates `.venv/` and installs dependencies from `pyproject.toml`.
 
-6. **Initialize Alembic** (only if not already present in the template):
-   ```bash
-   cd <target-dir>
-   test -f alembic.ini || uv run alembic init -t async alembic
-   ```
-   Then edit `alembic/env.py` to use `APP_DB_URL` from `pydantic-settings`.
+6. **Alembic is already initialized** in the template (`alembic.ini`, `alembic/env.py`, `alembic/script.py.mako`). `env.py` already reads `APP_DB_URL` from pydantic-settings. Do NOT run `alembic init` — it will conflict with the existing files.
+
+   When the first model is added, import it into `alembic/env.py` so autogenerate picks it up, and set `target_metadata = Base.metadata`.
 
 7. **Initialize git**:
    ```bash

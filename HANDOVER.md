@@ -14,19 +14,28 @@ Time budget: **~30 minutes** including downloads.
 Open PowerShell **as Administrator** and run:
 
 ```powershell
-# If you already have winget, skip this check
+# Confirm winget works
 winget --version
 
-# Install everything we need
-winget install --id Git.Git                -e --source winget --silent
-winget install --id GitHub.cli             -e --source winget --silent
-winget install --id Python.Python.3.12     -e --source winget --silent
-winget install --id Anthropic.ClaudeCode   -e --source winget --silent
-winget install --id Microsoft.VisualStudioCode -e --source winget --silent
-winget install --id astral-sh.uv           -e --source winget --silent
+# Core tools
+winget install --id Git.Git                      -e --source winget --silent
+winget install --id GitHub.cli                   -e --source winget --silent
+winget install --id Python.Python.3.12           -e --source winget --silent
+winget install --id OpenJS.NodeJS.LTS            -e --source winget --silent   # Claude Code CLI uses Node
+winget install --id Anthropic.ClaudeCode         -e --source winget --silent
+winget install --id Microsoft.VisualStudioCode   -e --source winget --silent
+winget install --id astral-sh.uv                 -e --source winget --silent
+winget install --id Docker.DockerDesktop         -e --source winget --silent   # for local container builds
+
+# Microsoft ODBC Driver 18 for SQL Server — REQUIRED before pyodbc can install
+winget install --id Microsoft.ODBCDriverForSQLServer.18 -e --source winget --silent
 ```
 
 > **If winget refuses any line**: download the installer directly from the vendor's site, install manually, continue.
+>
+> **Docker Desktop requires a reboot** after first install. Do this before Step 4.
+>
+> **Without the ODBC Driver, `uv sync` will fail** when it tries to install `pyodbc`. The Dockerfile installs the Linux version at build time, so CI is fine — this is a local-dev prerequisite only.
 
 Close PowerShell. Open a **fresh Git Bash** (this gets the new PATH).
 
@@ -35,12 +44,19 @@ Verify each tool:
 ```bash
 git --version
 gh --version
+node --version         # >= 20
 python --version       # should say 3.12.x
 claude --version
 uv --version
+docker --version
+
+# Verify ODBC Driver 18 is registered
+python -c "import pyodbc" 2>/dev/null || python -m pip install pyodbc
+python -c "import pyodbc; print([d for d in pyodbc.drivers() if 'SQL Server' in d])"
+# expected output: ['ODBC Driver 18 for SQL Server']
 ```
 
-All five must print a version. If `claude` is missing, reboot — Windows sometimes won't pick up new PATH entries without it.
+All must print a version / show the driver. If `claude` or `docker` is missing, **reboot** — Windows often won't pick up new PATH entries without it.
 
 ---
 

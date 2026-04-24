@@ -35,12 +35,13 @@ ENV PYTHONUTF8=1 \
     PYTHONUNBUFFERED=1 \
     PATH="/app/.venv/bin:$PATH"
 
-# Choose ONE of the entry commands below based on product profile in ARCHITECTURE.md:
+# IMPORTANT — pick ONE entry point below and DELETE THE OTHER TWO before building.
+# Leaving both means only the LAST CMD wins and you will ship the wrong app.
 
-# Streamlit (internal tool):
-# EXPOSE 8501
-# CMD ["streamlit", "run", "src/app.py", "--server.port=8501", "--server.address=0.0.0.0"]
+# Streamlit (internal tools, dashboards) — the default scaffold
+EXPOSE 8501
+CMD ["streamlit", "run", "src/app.py", "--server.port=8501", "--server.address=0.0.0.0"]
 
-# FastAPI (customer-facing / API):
-EXPOSE 8000
-CMD ["uvicorn", "src.main:app", "--host", "0.0.0.0", "--port", "8000"]
+# FastAPI (customer-facing apps, pure APIs) — uncomment these and delete the Streamlit pair above
+# EXPOSE 8000
+# CMD ["uvicorn", "src.main:app", "--host", "0.0.0.0", "--port", "8000", "--workers", "4"]

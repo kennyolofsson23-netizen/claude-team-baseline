@@ -28,8 +28,11 @@ try:
         "id_rsa", "id_ed25519",
     }
     BLOCKED_EXTENSIONS = {".png", ".jpg", ".jpeg", ".gif", ".bmp", ".ico", ".webp", ".avif"}
-    # Directories where images are legitimate tracked assets
-    IMAGE_ALLOW_PREFIXES = ("apps/hub/public/", "apps/dashboard/public/", "apps/web/public/", "public/")
+    # Directories where images are legitimate tracked assets (Python stack conventions)
+    IMAGE_ALLOW_PREFIXES = (
+        "public/", "static/", "assets/",
+        "src/static/", "src/assets/", "src/templates/static/",
+    )
 
     violations = []
     for f in staged_files:

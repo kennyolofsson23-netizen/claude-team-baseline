@@ -36,32 +36,54 @@ check "~/work/ exists"     "test -d $HOME/work"
 check "Template .claude/"  "test -d $BASELINE_DIR/template/.claude"
 check "Template CLAUDE.md" "test -f $BASELINE_DIR/template/.claude/CLAUDE.md"
 
-# agent count
+# agent count (target: 13)
 AGENT_COUNT=$(ls "$BASELINE_DIR/template/.claude/agents"/*.md 2>/dev/null | wc -l | tr -d ' ')
-if [ "$AGENT_COUNT" -ge 12 ]; then
+if [ "$AGENT_COUNT" -ge 13 ]; then
     echo "  [ok] Agents: $AGENT_COUNT found"
 else
-    echo "  [X]  Agents: $AGENT_COUNT found (expected 12)"
+    echo "  [X]  Agents: $AGENT_COUNT found (expected 13)"
     FAIL=1
 fi
 
-# skill count
+# skill count (target: 4 stack-specific)
 SKILL_COUNT=$(ls -d "$BASELINE_DIR/template/.claude/skills"/*/ 2>/dev/null | wc -l | tr -d ' ')
 if [ "$SKILL_COUNT" -ge 4 ]; then
     echo "  [ok] Skills: $SKILL_COUNT found"
 else
-    echo "  [X]  Skills: $SKILL_COUNT found (expected 4+ stack-specific)"
+    echo "  [X]  Skills: $SKILL_COUNT found (expected 4)"
     FAIL=1
 fi
 
-# hook count
+# hook count (target: 7 — auto-invoke-router + 5 safety + trigger-rules.yml)
 HOOK_COUNT=$(ls "$BASELINE_DIR/template/.claude/hooks"/* 2>/dev/null | wc -l | tr -d ' ')
-if [ "$HOOK_COUNT" -ge 5 ]; then
+if [ "$HOOK_COUNT" -ge 7 ]; then
     echo "  [ok] Hooks: $HOOK_COUNT found"
 else
-    echo "  [X]  Hooks: $HOOK_COUNT found (expected 5+)"
+    echo "  [X]  Hooks: $HOOK_COUNT found (expected 7)"
     FAIL=1
 fi
+
+# rules count (target: 7)
+RULES_COUNT=$(ls "$BASELINE_DIR/template/.claude/rules"/*.md 2>/dev/null | wc -l | tr -d ' ')
+if [ "$RULES_COUNT" -ge 7 ]; then
+    echo "  [ok] Rules: $RULES_COUNT found"
+else
+    echo "  [X]  Rules: $RULES_COUNT found (expected 7)"
+    FAIL=1
+fi
+
+# scaffold template sanity
+for required in pyproject.toml Dockerfile .github/workflows/ci.yml .pre-commit-config.yaml \
+                src/app.py src/main.py src/settings.py src/db.py src/errors.py \
+                tests/conftest.py tests/test_smoke.py \
+                alembic.ini alembic/env.py .env.example .gitignore ; do
+    if [ -f "$BASELINE_DIR/template/$required" ]; then
+        :
+    else
+        echo "  [X]  Missing in template: $required"
+        FAIL=1
+    fi
+done
 
 echo ""
 if [ "$FAIL" -eq 0 ]; then

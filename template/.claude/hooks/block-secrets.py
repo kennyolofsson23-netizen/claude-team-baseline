@@ -31,16 +31,25 @@ if basename in BLOCKED_FILES:
     )
     sys.exit(2)
 
-# Block image/binary files
-BLOCKED_EXTENSIONS = {".png", ".jpg", ".jpeg", ".gif", ".bmp", ".ico", ".svg", ".webp"}
+# Block image/binary files — but allow in standard asset directories
+# where logos, favicons, and product images legitimately live.
+BLOCKED_EXTENSIONS = {".png", ".jpg", ".jpeg", ".gif", ".bmp", ".ico", ".webp", ".avif"}
+IMAGE_ALLOW_PREFIXES = (
+    "public/", "static/", "assets/",
+    "src/static/", "src/assets/", "src/templates/static/",
+)
 
 if ext in BLOCKED_EXTENSIONS:
-    print(
-        f"BLOCKED: Cannot write image files ('{ext}'). "
-        f"Binary/image files should not be created by Claude.",
-        file=sys.stderr,
-    )
-    sys.exit(2)
+    path_lower_img = file_path.replace("\\", "/").lower()
+    allowed = any(f"/{p}" in "/" + path_lower_img or path_lower_img.startswith(p)
+                  for p in IMAGE_ALLOW_PREFIXES)
+    if not allowed:
+        print(
+            f"BLOCKED: Writing '{ext}' outside asset directories. "
+            f"Image files belong in: {', '.join(IMAGE_ALLOW_PREFIXES)}",
+            file=sys.stderr,
+        )
+        sys.exit(2)
 
 # Block if path contains common secret directories
 SECRET_DIRS = {"/.ssh/", "/secrets/", "/private/"}
