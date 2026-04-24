@@ -103,24 +103,24 @@ if (Test-Path $bash) {
     Warn "Git Bash not found — reboot and re-run this script."
 }
 
-# ---------- step 6: authenticate claude ----------
-Step 6 "Claude authentication"
-Write-Host "  A browser window will open. Log in with your company Claude account"
-Write-Host "  (or personal Pro/Max until Enterprise is provisioned)."
-Write-Host "  Close the Claude session with /exit once login succeeds."
-Start-Sleep -Seconds 2
-try { claude } catch { Warn "Could not launch claude automatically — run 'claude' manually after reboot." }
-
-# ---------- step 7: start the wiki ----------
-Step 7 "Starting the wiki"
+# ---------- step 6: start the wiki (non-blocking, happens BEFORE claude) ----------
+Step 6 "Starting the wiki"
 $pythonExe = (Get-Command python -ErrorAction SilentlyContinue).Source
 if ($pythonExe) {
     Start-Process powershell -ArgumentList "-NoExit", "-Command", "python '$BaselinePath\wiki\serve.py'" -WindowStyle Minimized
     Ok "wiki starting on http://localhost:7777 (new window)"
+    Start-Sleep -Seconds 2
     Start-Process "http://localhost:7777"
 } else {
     Warn "Python not in PATH yet — reboot and run: python $BaselinePath\wiki\serve.py"
 }
+
+# ---------- step 7: claude auth reminder ----------
+Step 7 "Claude authentication — do this manually"
+Write-Host "  When ready, run:  claude" -ForegroundColor White
+Write-Host "  A browser will open. Log in with your company Claude account"
+Write-Host "  (or personal Pro/Max until Enterprise is provisioned)."
+Write-Host "  We do NOT auto-launch claude here — it's interactive and blocks this script."
 
 # ---------- summary ----------
 Write-Host ""
