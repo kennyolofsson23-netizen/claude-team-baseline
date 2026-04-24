@@ -2,6 +2,19 @@
 
 FastAPI is our choice for customer-facing apps (with Jinja2) and for pure API services. Streamlit is the default; FastAPI is used when Streamlit cannot meet the requirement.
 
+## Running for development
+
+```bash
+# Hot reload — restarts automatically on any .py file change
+uv run uvicorn src.main:app --reload
+
+# API docs auto-generated at:
+# http://localhost:8000/docs   (Swagger)
+# http://localhost:8000/redoc  (ReDoc)
+```
+
+`watchfiles` is in dev deps — uvicorn detects it and uses it for efficient file watching. Without it, `--reload` falls back to slow polling. Never use `--reload` in production.
+
 ## Entry point
 
 `src/main.py`:

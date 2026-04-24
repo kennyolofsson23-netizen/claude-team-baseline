@@ -30,8 +30,8 @@ uv remove <package-name>
 # Run the app (Streamlit)
 uv run streamlit run src/app.py
 
-# Run the app (FastAPI)
-uv run uvicorn src.main:app --reload
+# Run the app (FastAPI) with hot reload — restarts on .py file changes
+uv run uvicorn src.main:app --reload   # watchfiles is in dev deps, picked up automatically
 
 # Format + lint
 uv run ruff format
