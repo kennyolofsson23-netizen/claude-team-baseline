@@ -65,13 +65,13 @@ $env:PYTHONUTF8       = "1"
 $env:PYTHONIOENCODING = "utf-8"
 Ok "done"
 
-# ---------- step 3: authenticate github ----------
-Step 3 "GitHub authentication"
+# ---------- step 3: optional github authentication ----------
+Step 3 "GitHub authentication (optional — skipping if not logged in)"
 $authState = gh auth status 2>&1
 if ($LASTEXITCODE -ne 0) {
-    Write-Host "  A browser window will open. Log in with the GitHub account that owns the repo."
-    Write-Host "  Tip: pick HTTPS as the protocol when prompted."
-    gh auth login
+    Warn "gh not authenticated — SKIPPING."
+    Write-Host "  The repo is public, so `git clone` works without a login."
+    Write-Host "  Authenticate later with `gh auth login` once 2FA is sorted."
 } else {
     Ok "gh already authenticated"
 }
