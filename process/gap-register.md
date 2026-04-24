@@ -50,18 +50,18 @@ A resolved gap leaves the register and moves to a proper ADR or into one of the 
 - **Needed by**: Per-product, at launch.
 
 ### First real product
-- **Status**: open
+- **Status**: in-progress
 - **Owner**: Kenny
 - **Why it matters**: The baseline is designed but untested with a real product. Until we build one, some assumptions are unverified.
-- **Proposed first step**: Pick a small internal tool, run it end-to-end through the baseline.
+- **Candidate**: `mssql-tool` — CLI-native Python tool + MCP server for on-prem MSSQL via Windows domain auth. Validates the full scaffold + ships something useful.
 - **Needed by**: Asap — until then this is all theory.
 
-### MSSQL MCP — wire credentials
-- **Status**: framework-ready (via `.mcp.json` pattern), credentials not wired
-- **Owner**: Kenny + IT
-- **Why it matters**: MSSQL MCP lets Claude inspect schema and run SELECTs against a test DB, massively speeding up debugging and feature work. Needs Key Vault + managed identity wiring.
+### MSSQL MCP — on-prem CLI tool
+- **Status**: parked — planned as first project
+- **Owner**: Kenny
+- **Why it matters**: On-prem MSSQL with Windows domain auth has no suitable existing MCP. Decision: build CLI-native Python tool (`pyodbc` + `Trusted_Connection=yes`) that doubles as an MCP server (`mssql-tool serve`). Team gets a useful terminal tool and Claude gets DB access via the same codebase.
 - **Current workaround**: Claude reads SQLAlchemy models; cannot query the DB directly.
-- **Needed by**: Once we have a test MSSQL DB that's safe to query.
+- **Needed by**: After first project is scaffolded and a test DB is provisioned.
 
 ### Error-tracking MCP — choose one
 - **Status**: open
