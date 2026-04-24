@@ -29,7 +29,7 @@ uv run streamlit run src/app.py    # or uvicorn for FastAPI projects
 
 ## How to deploy
 
-Deployment is automated via GitHub Actions on green `main`. See `.github/workflows/` and `deployer` agent.
+Deployment is automated via Azure Pipelines on green `main`. See `azure-pipelines.yml` and `deployer` agent.
 
 Manual deploy (if needed):
 ```bash

@@ -49,7 +49,7 @@ def greet(name: str, count: int = 1) -> str:
 - Async: mark with `@pytest.mark.asyncio` (auto-enabled via `asyncio_mode = "auto"`)
 - DB tests: real MSSQL via the `APP_DB_URL` override — never mock the database
 - FastAPI: `from fastapi.testclient import TestClient` for sync routes; `httpx.AsyncClient` for async
-- Coverage floor: 80% lines, enforced by `pytest --cov-fail-under=80`
+- Coverage floor: 60% lines, enforced by `pytest --cov-fail-under=60`
 
 ## Common mistakes to catch in review
 

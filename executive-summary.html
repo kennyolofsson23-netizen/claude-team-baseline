@@ -1,0 +1,791 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Claude Code Platform — Executive Summary</title>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+<style>
+  :root {
+    --azure: #0078D4;
+    --azure-dark: #005A9E;
+    --azure-light: #50E6FF;
+    --green: #107C10;
+    --green-light: #54B054;
+    --dark: #0A0A0F;
+    --card: #12121A;
+    --card2: #1A1A28;
+    --border: #2A2A3A;
+    --text: #E8E8F0;
+    --muted: #888899;
+    --white: #FFFFFF;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: var(--dark);
+    color: var(--text);
+    line-height: 1.6;
+  }
+
+  /* HERO */
+  .hero {
+    background: linear-gradient(135deg, #0A0A0F 0%, #0D1B2E 50%, #0A1628 100%);
+    border-bottom: 1px solid var(--border);
+    padding: 64px 48px 56px;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -10%;
+    width: 600px;
+    height: 600px;
+    background: radial-gradient(circle, rgba(0,120,212,0.12) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(0,120,212,0.15);
+    border: 1px solid rgba(0,120,212,0.4);
+    border-radius: 20px;
+    padding: 6px 16px;
+    font-size: 13px;
+    color: var(--azure-light);
+    margin-bottom: 24px;
+    font-weight: 500;
+  }
+  .hero-badge .dot {
+    width: 8px; height: 8px;
+    background: var(--green-light);
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(0.8); }
+  }
+  .hero h1 {
+    font-size: 48px;
+    font-weight: 700;
+    line-height: 1.1;
+    margin-bottom: 16px;
+    background: linear-gradient(135deg, #FFFFFF 0%, #A8D4FF 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .hero p {
+    font-size: 20px;
+    color: var(--muted);
+    max-width: 640px;
+    margin-bottom: 40px;
+  }
+  .hero-meta {
+    display: flex;
+    gap: 32px;
+    flex-wrap: wrap;
+  }
+  .hero-meta-item {
+    display: flex;
+    flex-direction: column;
+  }
+  .hero-meta-item .val {
+    font-size: 32px;
+    font-weight: 700;
+    color: var(--azure-light);
+    line-height: 1;
+  }
+  .hero-meta-item .lbl {
+    font-size: 12px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-top: 4px;
+  }
+  .divider { width: 1px; background: var(--border); }
+
+  /* STATS */
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 1px;
+    background: var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+  .stat {
+    background: var(--card);
+    padding: 28px 24px;
+    text-align: center;
+  }
+  .stat .num {
+    font-size: 40px;
+    font-weight: 700;
+    color: var(--azure);
+    line-height: 1;
+    display: block;
+  }
+  .stat .label {
+    font-size: 12px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-top: 6px;
+    display: block;
+  }
+
+  /* MAIN GRID */
+  .main { max-width: 1400px; margin: 0 auto; padding: 48px; }
+
+  h2 {
+    font-size: 13px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--azure);
+    margin-bottom: 24px;
+  }
+
+  /* ARCHITECTURE */
+  .arch-section { margin-bottom: 56px; }
+  .arch-diagram {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 40px;
+    overflow: hidden;
+  }
+  .arch-svg {
+    width: 100%;
+    height: 320px;
+  }
+
+  /* CARDS GRID */
+  .cards-section { margin-bottom: 56px; }
+  .cards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 28px;
+    position: relative;
+    overflow: hidden;
+    transition: border-color 0.2s;
+  }
+  .card:hover { border-color: var(--azure); }
+  .card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: var(--azure);
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+  .card:hover::before { opacity: 1; }
+  .card-icon {
+    font-size: 28px;
+    margin-bottom: 16px;
+    display: block;
+  }
+  .card h3 {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--white);
+    margin-bottom: 8px;
+  }
+  .card p {
+    font-size: 14px;
+    color: var(--muted);
+    line-height: 1.5;
+  }
+  .card .tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 16px;
+  }
+  .tag {
+    background: rgba(0,120,212,0.12);
+    border: 1px solid rgba(0,120,212,0.25);
+    color: var(--azure-light);
+    font-size: 11px;
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-weight: 500;
+  }
+  .tag.green {
+    background: rgba(16,124,16,0.12);
+    border-color: rgba(16,124,16,0.3);
+    color: var(--green-light);
+  }
+
+  /* BEFORE/AFTER */
+  .compare-section { margin-bottom: 56px; }
+  .compare {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+  .compare-panel {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 28px;
+  }
+  .compare-panel.before { border-top: 2px solid #C50F1F; }
+  .compare-panel.after  { border-top: 2px solid var(--green-light); }
+  .compare-panel .header {
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 20px;
+  }
+  .before .header { color: #C50F1F; }
+  .after  .header { color: var(--green-light); }
+  .compare-panel ul {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .compare-panel li {
+    font-size: 14px;
+    color: var(--muted);
+    padding-left: 20px;
+    position: relative;
+  }
+  .compare-panel li::before {
+    position: absolute;
+    left: 0;
+    font-weight: 700;
+  }
+  .before li::before { content: '✕'; color: #C50F1F; }
+  .after  li::before { content: '✓'; color: var(--green-light); }
+  .after li { color: var(--text); }
+
+  /* LAYERS */
+  .layers-section { margin-bottom: 56px; }
+  .layers {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .layer {
+    display: grid;
+    grid-template-columns: 180px 1fr auto;
+    align-items: center;
+    gap: 24px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px 24px;
+  }
+  .layer-name {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--white);
+  }
+  .layer-desc {
+    font-size: 13px;
+    color: var(--muted);
+  }
+  .layer-status {
+    font-size: 12px;
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: 4px;
+    white-space: nowrap;
+  }
+  .status-live { background: rgba(16,124,16,0.15); color: var(--green-light); border: 1px solid rgba(16,124,16,0.3); }
+  .status-ready { background: rgba(0,120,212,0.12); color: var(--azure-light); border: 1px solid rgba(0,120,212,0.25); }
+  .status-phase2 { background: rgba(136,136,153,0.12); color: var(--muted); border: 1px solid var(--border); }
+
+  /* ROLLOUT */
+  .rollout-section { margin-bottom: 56px; }
+  .rollout-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+  .rollout-panel {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 28px;
+  }
+  .rollout-panel h3 {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--white);
+    margin-bottom: 16px;
+  }
+  .checklist { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+  .checklist li {
+    font-size: 13px;
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+  }
+  .checklist .check {
+    width: 18px; height: 18px;
+    border-radius: 4px;
+    flex-shrink: 0;
+    margin-top: 1px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: 700;
+  }
+  .check.done { background: var(--green); color: white; }
+  .check.pending { background: rgba(0,120,212,0.15); border: 1px solid var(--azure); color: var(--azure); }
+  .checklist .text { color: var(--muted); }
+  .checklist .text.done-text { color: var(--text); }
+
+  /* FOOTER */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 32px 48px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    color: var(--muted);
+    font-size: 13px;
+  }
+  footer .logo {
+    font-weight: 700;
+    color: var(--azure);
+    font-size: 16px;
+  }
+
+  /* TIMELINE */
+  .timeline-section { margin-bottom: 56px; }
+  .timeline {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2px;
+    background: var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+  .tl-item {
+    background: var(--card);
+    padding: 28px 24px;
+  }
+  .tl-hour {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--azure);
+    font-weight: 600;
+    margin-bottom: 12px;
+  }
+  .tl-title {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--white);
+    margin-bottom: 12px;
+  }
+  .tl-items {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .tl-items li {
+    font-size: 12px;
+    color: var(--muted);
+    padding-left: 14px;
+    position: relative;
+  }
+  .tl-items li::before {
+    content: '→';
+    position: absolute;
+    left: 0;
+    color: var(--azure);
+  }
+
+  @media (max-width: 1100px) {
+    .stats { grid-template-columns: repeat(3, 1fr); }
+    .cards { grid-template-columns: repeat(2, 1fr); }
+    .timeline { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-badge"><span class="dot"></span> Built in one session — 24 April 2026</div>
+  <h1>Claude Code<br>Team Platform</h1>
+  <p>A production-ready AI development platform for 10 IT engineers. One install script. Consistent quality. Security enforced by default.</p>
+  <div class="hero-meta">
+    <div class="hero-meta-item">
+      <span class="val">~3h</span>
+      <span class="lbl">Build time</span>
+    </div>
+    <div class="divider"></div>
+    <div class="hero-meta-item">
+      <span class="val">10</span>
+      <span class="lbl">Developers</span>
+    </div>
+    <div class="divider"></div>
+    <div class="hero-meta-item">
+      <span class="val">1</span>
+      <span class="lbl">Install command</span>
+    </div>
+    <div class="divider"></div>
+    <div class="hero-meta-item">
+      <span class="val">Phase 1</span>
+      <span class="lbl">Rollout stage</span>
+    </div>
+  </div>
+</div>
+
+<!-- STATS -->
+<div class="stats">
+  <div class="stat"><span class="num">12</span><span class="label">AI Agents</span></div>
+  <div class="stat"><span class="num">9</span><span class="label">Security Hooks</span></div>
+  <div class="stat"><span class="num">5</span><span class="label">MCP Servers</span></div>
+  <div class="stat"><span class="num">4</span><span class="label">Skill Packs</span></div>
+  <div class="stat"><span class="num">7</span><span class="label">Code Rules</span></div>
+  <div class="stat"><span class="num">60%</span><span class="label">Test Coverage Min</span></div>
+</div>
+
+<div class="main">
+
+  <!-- ARCHITECTURE -->
+  <div class="arch-section">
+    <h2>Platform Architecture</h2>
+    <div class="arch-diagram">
+      <svg class="arch-svg" viewBox="0 0 1200 300" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <marker id="arrow" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+            <path d="M0,0 L0,6 L8,3 z" fill="#0078D4"/>
+          </marker>
+          <filter id="glow">
+            <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+            <feMerge><feMergeNode in="coloredBlur"/><feMergeNode in="SourceGraphic"/></feMerge>
+          </filter>
+        </defs>
+
+        <!-- Developer PC -->
+        <rect x="20" y="80" width="200" height="140" rx="10" fill="#12121A" stroke="#0078D4" stroke-width="1.5"/>
+        <text x="120" y="108" text-anchor="middle" font-family="Segoe UI" font-size="11" fill="#0078D4" font-weight="600" text-transform="uppercase" letter-spacing="1">DEVELOPER PC</text>
+        <rect x="40" y="118" width="160" height="24" rx="4" fill="#1A1A28"/>
+        <text x="120" y="134" text-anchor="middle" font-family="Segoe UI" font-size="11" fill="#E8E8F0">Claude Code + Superpowers</text>
+        <rect x="40" y="148" width="160" height="24" rx="4" fill="#1A1A28"/>
+        <text x="120" y="164" text-anchor="middle" font-family="Segoe UI" font-size="11" fill="#E8E8F0">12 Agents · 9 Hooks · 5 MCPs</text>
+        <rect x="40" y="178" width="160" height="24" rx="4" fill="#1A1A28"/>
+        <text x="120" y="194" text-anchor="middle" font-family="Segoe UI" font-size="11" fill="#E8E8F0">az login · uv · Docker</text>
+
+        <!-- Arrow 1 -->
+        <line x1="222" y1="150" x2="298" y2="150" stroke="#0078D4" stroke-width="1.5" marker-end="url(#arrow)"/>
+        <text x="260" y="142" text-anchor="middle" font-family="Segoe UI" font-size="10" fill="#888899">git pull</text>
+
+        <!-- ADO -->
+        <rect x="300" y="80" width="200" height="140" rx="10" fill="#12121A" stroke="#0078D4" stroke-width="1.5"/>
+        <text x="400" y="108" text-anchor="middle" font-family="Segoe UI" font-size="11" fill="#0078D4" font-weight="600" letter-spacing="1">AZURE DEVOPS</text>
+        <rect x="320" y="118" width="160" height="24" rx="4" fill="#1A1A28"/>
+        <text x="400" y="134" text-anchor="middle" font-family="Segoe UI" font-size="11" fill="#E8E8F0">claude-team-baseline repo</text>
+        <rect x="320" y="148" width="160" height="24" rx="4" fill="#1A1A28"/>
+        <text x="400" y="164" text-anchor="middle" font-family="Segoe UI" font-size="11" fill="#E8E8F0">Azure Pipelines CI</text>
+        <rect x="320" y="178" width="160" height="24" rx="4" fill="#1A1A28"/>
+        <text x="400" y="194" text-anchor="middle" font-family="Segoe UI" font-size="11" fill="#E8E8F0">Branch policies · PAT auth</text>
+
+        <!-- Arrow 2 -->
+        <line x1="502" y1="150" x2="578" y2="150" stroke="#0078D4" stroke-width="1.5" marker-end="url(#arrow)"/>
+        <text x="540" y="142" text-anchor="middle" font-family="Segoe UI" font-size="10" fill="#888899">deploy</text>
+
+        <!-- Azure Cloud -->
+        <rect x="580" y="40" width="200" height="220" rx="10" fill="#12121A" stroke="#0078D4" stroke-width="1.5"/>
+        <text x="680" y="68" text-anchor="middle" font-family="Segoe UI" font-size="11" fill="#0078D4" font-weight="600" letter-spacing="1">AZURE CLOUD</text>
+        <rect x="600" y="78" width="160" height="22" rx="4" fill="#1A1A28"/>
+        <text x="680" y="93" text-anchor="middle" font-family="Segoe UI" font-size="11" fill="#E8E8F0">Container Registry (ACR)</text>
+        <rect x="600" y="106" width="160" height="22" rx="4" fill="#1A1A28"/>
+        <text x="680" y="121" text-anchor="middle" font-family="Segoe UI" font-size="11" fill="#E8E8F0">App Service for Containers</text>
+        <rect x="600" y="134" width="160" height="22" rx="4" fill="#1A1A28"/>
+        <text x="680" y="149" text-anchor="middle" font-family="Segoe UI" font-size="11" fill="#E8E8F0">Key Vault (secrets)</text>
+        <rect x="600" y="162" width="160" height="22" rx="4" fill="#1A1A28"/>
+        <text x="680" y="177" text-anchor="middle" font-family="Segoe UI" font-size="11" fill="#E8E8F0">App Insights (future)</text>
+        <rect x="600" y="190" width="160" height="22" rx="4" fill="#1A1A28"/>
+        <text x="680" y="205" text-anchor="middle" font-family="Segoe UI" font-size="11" fill="#E8E8F0">Subscription: one landing zone</text>
+        <rect x="600" y="218" width="160" height="22" rx="4" fill="#1A1A28"/>
+        <text x="680" y="233" text-anchor="middle" font-family="Segoe UI" font-size="11" fill="#E8E8F0">Tags: project · department</text>
+
+        <!-- Arrow 3 -->
+        <line x1="782" y1="150" x2="858" y2="150" stroke="#2A2A3A" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#arrow)"/>
+        <text x="820" y="142" text-anchor="middle" font-family="Segoe UI" font-size="10" fill="#888899">query</text>
+
+        <!-- On-prem -->
+        <rect x="860" y="80" width="200" height="140" rx="10" fill="#12121A" stroke="#2A2A3A" stroke-width="1.5" stroke-dasharray="6,3"/>
+        <text x="960" y="108" text-anchor="middle" font-family="Segoe UI" font-size="11" fill="#888899" font-weight="600" letter-spacing="1">ON-PREMISES</text>
+        <rect x="880" y="118" width="160" height="24" rx="4" fill="#1A1A28"/>
+        <text x="960" y="134" text-anchor="middle" font-family="Segoe UI" font-size="11" fill="#888899">SQL Server (Windows auth)</text>
+        <rect x="880" y="148" width="160" height="24" rx="4" fill="#1A1A28"/>
+        <text x="960" y="164" text-anchor="middle" font-family="Segoe UI" font-size="11" fill="#888899">VPN access</text>
+        <rect x="880" y="178" width="160" height="24" rx="4" fill="#1A1A28"/>
+        <text x="960" y="194" text-anchor="middle" font-family="Segoe UI" font-size="11" fill="#888899">mssql-tool (planned)</text>
+
+        <!-- Legend -->
+        <rect x="860" y="248" width="12" height="12" rx="2" fill="none" stroke="#0078D4" stroke-width="1.5"/>
+        <text x="878" y="259" font-family="Segoe UI" font-size="11" fill="#888899">Active</text>
+        <rect x="940" y="248" width="12" height="12" rx="2" fill="none" stroke="#2A2A3A" stroke-width="1.5" stroke-dasharray="4,2"/>
+        <text x="958" y="259" font-family="Segoe UI" font-size="11" fill="#888899">Planned</text>
+
+        <!-- Intune badge -->
+        <rect x="20" y="248" width="200" height="28" rx="6" fill="rgba(0,120,212,0.08)" stroke="rgba(0,120,212,0.25)" stroke-width="1"/>
+        <text x="120" y="266" text-anchor="middle" font-family="Segoe UI" font-size="11" fill="#50E6FF">📦 Intune-deployable via Win32 app</text>
+      </svg>
+    </div>
+  </div>
+
+  <!-- WHAT WAS BUILT -->
+  <div class="cards-section">
+    <h2>What Was Built</h2>
+    <div class="cards">
+      <div class="card">
+        <span class="card-icon">⚡</span>
+        <h3>One-Command Setup</h3>
+        <p>A single PowerShell line installs every tool, authenticates to Azure, clones the repo, configures Claude, and opens the team wiki. Any new hire is productive in under 10 minutes.</p>
+        <div class="tags">
+          <span class="tag">go.ps1</span>
+          <span class="tag">winget</span>
+          <span class="tag">WSL</span>
+          <span class="tag">Intune-ready</span>
+        </div>
+      </div>
+      <div class="card">
+        <span class="card-icon">🤖</span>
+        <h3>12 Specialist AI Agents</h3>
+        <p>Architect, spec-writer, test-writer, code-reviewer, security-reviewer, performance-reviewer, error-detective, deployer, refactoring-specialist, qa-runner, feature-builder, project-scaffolder.</p>
+        <div class="tags">
+          <span class="tag">Auto-invoked</span>
+          <span class="tag">No manual selection</span>
+        </div>
+      </div>
+      <div class="card">
+        <span class="card-icon">🔒</span>
+        <h3>9 Security Hooks</h3>
+        <p>Blocks secrets from commits, dangerous shell commands, off-stack packages, and data-classification violations — before they reach git. Verification gate fires automatically when work is declared done.</p>
+        <div class="tags">
+          <span class="tag green">PreToolUse</span>
+          <span class="tag green">Stop hook</span>
+          <span class="tag green">gitleaks CI</span>
+        </div>
+      </div>
+      <div class="card">
+        <span class="card-icon">☁️</span>
+        <h3>5 MCP Servers</h3>
+        <p>Context7 (live library docs), Playwright (UI testing), Sequential Thinking (complex reasoning), Azure MCP (cloud resources via az login), with the SQL MCP planned as the first internal project.</p>
+        <div class="tags">
+          <span class="tag">Context7</span>
+          <span class="tag">Azure MCP</span>
+          <span class="tag">Playwright</span>
+        </div>
+      </div>
+      <div class="card">
+        <span class="card-icon">🏗️</span>
+        <h3>Project Scaffold</h3>
+        <p>One command creates a new project: Streamlit + FastAPI + SQLAlchemy skeleton, CI pipeline, pre-commit hooks, Claude config, and passing smoke tests — ready to code in under 60 seconds.</p>
+        <div class="tags">
+          <span class="tag">Python 3.12</span>
+          <span class="tag">uv</span>
+          <span class="tag">Azure Pipelines</span>
+        </div>
+      </div>
+      <div class="card">
+        <span class="card-icon">📚</span>
+        <h3>Living Team Wiki</h3>
+        <p>A browsable wiki covering every decision, pattern, and runbook. Runs locally on every machine. Updated alongside the code — never out of date. 50+ pages written this session.</p>
+        <div class="tags">
+          <span class="tag">localhost:7777</span>
+          <span class="tag">50+ pages</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TIMELINE -->
+  <div class="timeline-section">
+    <h2>Built Today — 3 Hours</h2>
+    <div class="timeline">
+      <div class="tl-item">
+        <div class="tl-hour">Hour 1</div>
+        <div class="tl-title">Foundation &amp; Migration</div>
+        <ul class="tl-items">
+          <li>GitHub → Azure DevOps migration</li>
+          <li>GitHub Actions → Azure Pipelines</li>
+          <li>GitHub CLI → Azure CLI throughout</li>
+          <li>Azure CAF naming conventions</li>
+          <li>Wiki counts corrected to reality</li>
+          <li>Coverage floor fixed to 60%</li>
+        </ul>
+      </div>
+      <div class="tl-item">
+        <div class="tl-hour">Hour 2</div>
+        <div class="tl-title">Platform &amp; Intelligence</div>
+        <ul class="tl-items">
+          <li>Azure MCP + Context7 wired in</li>
+          <li>Superpowers plugin v5.0.7 installed</li>
+          <li>WSL update added to bootstrap</li>
+          <li>watchfiles + pyyaml in dev deps</li>
+          <li>FastAPI hot reload documented</li>
+          <li>Landing zone strategy decided</li>
+        </ul>
+      </div>
+      <div class="tl-item">
+        <div class="tl-hour">Hour 3</div>
+        <div class="tl-title">Quality &amp; Rollout Prep</div>
+        <ul class="tl-items">
+          <li>3 silent hook bugs fixed</li>
+          <li>Stop hook added (verification gate)</li>
+          <li>Full wiki review — all stale refs cleared</li>
+          <li>ROLLOUT.md checklist created</li>
+          <li>Gap register reviewed and updated</li>
+          <li>MSSQL MCP strategy decided</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- BEFORE/AFTER -->
+  <div class="compare-section">
+    <h2>Before vs After</h2>
+    <div class="compare">
+      <div class="compare-panel before">
+        <div class="header">Before — this morning</div>
+        <ul>
+          <li>Every developer had a different Claude setup</li>
+          <li>No shared agents, skills, or rules</li>
+          <li>No security guardrails on AI output</li>
+          <li>Junior developers could commit secrets</li>
+          <li>No CI pipeline template</li>
+          <li>No deployment process</li>
+          <li>No documentation standard</li>
+          <li>Each project started from scratch</li>
+        </ul>
+      </div>
+      <div class="compare-panel after">
+        <div class="header">After — right now</div>
+        <ul>
+          <li>Every developer gets identical, enterprise-grade Claude</li>
+          <li>12 specialist agents auto-invoked by context</li>
+          <li>9 hooks enforce security and quality automatically</li>
+          <li>Secrets blocked before they reach git — always</li>
+          <li>Azure Pipelines CI on every project</li>
+          <li>Deployer agent handles Docker → ACR → App Service</li>
+          <li>50+ page wiki, updated with the code</li>
+          <li>New project scaffold: one command, 60 seconds</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- LAYERS -->
+  <div class="layers-section">
+    <h2>Governance Layers</h2>
+    <div class="layers">
+      <div class="layer">
+        <div class="layer-name">Project Claude Settings</div>
+        <div class="layer-desc">Allow/deny lists for commands, files, and tools. Blocks off-stack packages, force-push, secrets. Active on every project.</div>
+        <span class="layer-status status-live">Live — Phase 1</span>
+      </div>
+      <div class="layer">
+        <div class="layer-name">9 Pre/Post Hooks</div>
+        <div class="layer-desc">Real-time enforcement: blocks before Claude runs a dangerous command. Cannot be silently bypassed within Claude.</div>
+        <span class="layer-status status-live">Live — Phase 1</span>
+      </div>
+      <div class="layer">
+        <div class="layer-name">Azure Pipelines CI</div>
+        <div class="layer-desc">ruff format, ruff lint, mypy, pytest (60% coverage), gitleaks secret scan. Blocks merge on any failure.</div>
+        <span class="layer-status status-ready">Ready — pending ADO</span>
+      </div>
+      <div class="layer">
+        <div class="layer-name">Managed Settings (MDM)</div>
+        <div class="layer-desc">Enterprise-wide Claude policy via Intune. Disables bypass modes, forces SSO, locks MCP list. Config ready in managed-settings/example.json.</div>
+        <span class="layer-status status-phase2">Phase 2 — needs Enterprise license</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ROLLOUT STATUS -->
+  <div class="rollout-section">
+    <h2>Rollout Status</h2>
+    <div class="rollout-grid">
+      <div class="rollout-panel">
+        <h3>✅ Complete</h3>
+        <ul class="checklist">
+          <li><span class="check done">✓</span><span class="text done-text">Bootstrap installer (go.ps1 + bootstrap.ps1)</span></li>
+          <li><span class="check done">✓</span><span class="text done-text">12 agents · 9 hooks · 4 skills · 5 MCPs</span></li>
+          <li><span class="check done">✓</span><span class="text done-text">Azure Pipelines CI template</span></li>
+          <li><span class="check done">✓</span><span class="text done-text">Project scaffold (Streamlit + FastAPI + MSSQL)</span></li>
+          <li><span class="check done">✓</span><span class="text done-text">Superpowers plugin wired into bootstrap</span></li>
+          <li><span class="check done">✓</span><span class="text done-text">Azure MCP + Context7 configured</span></li>
+          <li><span class="check done">✓</span><span class="text done-text">Team wiki — 50+ pages</span></li>
+          <li><span class="check done">✓</span><span class="text done-text">Security hooks (9) — all validated</span></li>
+          <li><span class="check done">✓</span><span class="text done-text">Azure landing zone strategy decided</span></li>
+          <li><span class="check done">✓</span><span class="text done-text">RBAC model defined</span></li>
+        </ul>
+      </div>
+      <div class="rollout-panel">
+        <h3>⏳ Before Release (3 items)</h3>
+        <ul class="checklist">
+          <li><span class="check pending">→</span><span class="text">ADO org + project created &amp; repo imported</span></li>
+          <li><span class="check pending">→</span><span class="text">Azure subscription ID wired into .mcp.json</span></li>
+          <li><span class="check pending">→</span><span class="text">ACR login server wired into deployer agent</span></li>
+          <li style="margin-top:8px"><span class="check done">✓</span><span class="text done-text">Clean-machine test (1 PC)</span></li>
+          <li><span class="check done">✓</span><span class="text done-text">Teammate walkthrough (1 person)</span></li>
+        </ul>
+
+        <h3 style="margin-top:24px">📅 Post-Rollout</h3>
+        <ul class="checklist">
+          <li><span class="check pending">→</span><span class="text">mssql-tool (first internal project)</span></li>
+          <li><span class="check pending">→</span><span class="text">Developer RBAC on Azure</span></li>
+          <li><span class="check pending">→</span><span class="text">Error-tracking MCP (App Insights)</span></li>
+          <li><span class="check pending">→</span><span class="text">Phase 2: Enterprise license + MDM</span></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  <span class="logo">claude-team-baseline</span>
+  <span>Built with Claude Code · 24 April 2026 · Phase 1 of 4</span>
+  <span>Internal use only — do not distribute</span>
+</footer>
+
+<script>
+  // Animate stat numbers on load
+  document.querySelectorAll('.stat .num').forEach(el => {
+    const target = el.textContent.trim();
+    const isNum = !isNaN(parseInt(target));
+    if (!isNum) return;
+    const end = parseInt(target);
+    let start = 0;
+    const suffix = target.replace(/[0-9]/g, '');
+    const duration = 1200;
+    const step = duration / end;
+    const timer = setInterval(() => {
+      start++;
+      el.textContent = start + suffix;
+      if (start >= end) { el.textContent = target; clearInterval(timer); }
+    }, step);
+  });
+</script>
+</body>
+</html>

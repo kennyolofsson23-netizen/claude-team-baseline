@@ -20,7 +20,7 @@ We are deliberate and narrow. Fewer choices means fewer bugs, faster onboarding,
 | HTTP client | **httpx** | async-capable, drop-in replacement for `requests` |
 | Logging | **structlog** (JSON in prod) | Structured by default; plays well with observability tools |
 | Container | **Docker** | One runtime, any cloud |
-| CI | **GitHub Actions** | `.github/workflows/ci.yml` runs ruff + pytest + mypy |
+| CI | **Azure Pipelines** | `azure-pipelines.yml` runs ruff + pytest + mypy |
 | Deploy | **Azure App Service for Containers** (assumed default) | Sensible Azure+MSSQL default; swap in your target |
 
 ## Not in our stack (common things devs ask for, all NO unless architect approves)
