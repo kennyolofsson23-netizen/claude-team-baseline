@@ -43,11 +43,11 @@ A resolved gap leaves the register and moves to a proper ADR or into one of the 
 - **Needed by**: Before the first customer-facing (internal-customer) UI ships.
 
 ### Data classification content
-- **Status**: framework-ready, content-empty
+- **Status**: parked — post-rollout
 - **Owner**: ARB
 - **Why it matters**: The data-classification hook is built and running allow-by-default. We need to populate the manifest with real rules once we know what data each product handles.
 - **Current workaround**: Warn + log on heuristic matches; manual review of sensitive files.
-- **Needed by**: Per-product, at launch.
+- **Needed by**: Per-product, at first launch. Not blocking team rollout.
 
 ### First real product
 - **Status**: in-progress
