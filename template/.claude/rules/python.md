@@ -55,7 +55,7 @@ Anything outside this list requires architect approval via a PR to `claude-team-
 - Use `pytest-asyncio` for async code. Mark with `@pytest.mark.asyncio`.
 - Use `httpx.AsyncClient` for testing FastAPI endpoints — not the sync TestClient.
 - Database tests: use a dedicated test DB (`APP_DB_URL` env var overridden in `conftest.py`). Never mock the DB — integration tests hit real MSSQL.
-- Coverage floor: 80% lines. Checked in CI via `pytest --cov --cov-fail-under=80`.
+- Coverage floor: 60% lines (first 3 months; revisit before raising). Checked in CI via `pytest --cov --cov-fail-under=60`.
 
 ## Environment & Secrets
 - Config via `pydantic-settings` reading from `.env`.

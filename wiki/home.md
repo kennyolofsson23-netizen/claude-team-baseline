@@ -3,6 +3,8 @@
   <p>The shared Claude Code configuration for our engineering team. One repo, one install script, one way of working.</p>
 </div>
 
+> **New here? Install is one PowerShell line.** Open `SETUP.md` in the repo root, copy the command, paste into PowerShell-as-Administrator, wait ~10 min. Wiki + Claude ready to go.
+
 ## What this wiki covers
 
 This is the living documentation for our team's Claude Code setup. If you're new, start with **Getting Started**. If you're debugging, jump to **Cheat sheets** or **Troubleshooting**. Everything that affects how we build is documented here — and when we change something, we update this wiki in the same PR.

@@ -1,6 +1,9 @@
-# HANDOVER — Setting Up Claude on Your Work PC
+# HANDOVER — detailed setup notes
 
-This is a step-by-step for Kenny (or anyone) to bootstrap a work machine from zero. Assumes:
+> **For most people, start with `SETUP.md` — it's one PowerShell line.**
+> This file is the step-by-step fallback if something in the one-liner breaks, or if you want to know exactly what's happening.
+
+This is a step-by-step for a Windows work machine bootstrap. Assumes:
 - Windows 10/11
 - Local admin rights
 - Git Bash will be installed (or is already)

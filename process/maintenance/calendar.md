@@ -2,6 +2,23 @@
 
 > What happens on what cadence. Pinned to the wiki so it's always findable.
 
+## The lean version (use this for the first 3 months)
+
+Only two cadences while we find our rhythm:
+
+| When | Task | Who |
+|---|---|---|
+| **Weekly (Monday, 10 min)** | Dependabot triage — approve patches, defer anything unclear | Each project owner |
+| **Quarterly (2h block)** | Everything else — backup restore, access review, cost check, runbook freshness, ARB product review, gap-register walk-through | ARB + project owners together |
+
+Event-driven things (CVE, incident, change-wish) still happen whenever triggered.
+
+The detailed cadence below is the **target** once we have 3+ live products and a rhythm. Don't try to run everything weekly from day one.
+
+---
+
+## Full cadence (target state, month 4+)
+
 ## Weekly
 
 | Task | Who | What |

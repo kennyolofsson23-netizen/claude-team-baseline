@@ -2,6 +2,15 @@
 
 > One file per decision. Numbered sequentially. See `0000-record-architecture-decisions.md` for the convention.
 
+## Not every change needs an ADR
+
+ADRs are **as-needed, not mandatory per feature**. Write one only when:
+- You picked a library, framework or pattern that will outlast a sprint
+- You made a trade-off someone in 6 months will question
+- A decision is subtle enough that "read the commit history" won't explain it
+
+If in doubt, skip it. Three great ADRs beat twenty noisy ones.
+
 ## When to write one
 
 - Picked a library / framework / pattern that will affect several files

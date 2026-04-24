@@ -4,7 +4,7 @@ An "agent" in Claude Code is a purpose-built sub-engineer you can spawn for a sp
 
 **You almost never pick an agent manually.** The [auto-invoke router](hooks.md) fires the right agent based on your prompt. This page documents what each one does so you can recognize the output.
 
-## The 13 agents
+## The 12 agents
 
 | Agent | Fires when | What it does |
 |---|---|---|
@@ -13,8 +13,7 @@ An "agent" in Claude Code is a purpose-built sub-engineer you can spawn for a sp
 | **feature-builder** | You ask to implement a feature after a plan exists | Writes the code following the plan. Test-first rhythm. Commits per feature. |
 | **test-writer** | You ask to write tests, add tests, cover behaviour | Writes pytest tests. Tests mirror src/ layout. Uses real MSSQL for DB tests — never mocks the database. |
 | **test-architect** | You need a testing strategy for a big feature | Produces a TEST_PLAN.md — test pyramid, E2E flows, property-based candidates. |
-| **code-reviewer** | You ask to review, check your work, or say "ready for PR" | Does a blocking code review. Catches bugs, style issues, security issues. You don't merge until it signs off. |
-| **correctness-reviewer** | Implicit — fires alongside code-reviewer for type/error checks | Focused on type safety, error handling, test coverage, convention adherence. |
+| **code-reviewer** | You ask to review, check your work, or say "ready for PR" | Blocking code review — correctness, types, error handling, style, security smells. You don't merge until it signs off. |
 | **security-reviewer** | Your prompt mentions auth, login, password, token, secret, crypto | OWASP-style review. Injection risks, secret exposure, auth flaws. |
 | **performance-reviewer** | Your prompt mentions slow, optimize, N+1, hot path | Looks for N+1 queries, bundle size, memory leaks, unnecessary loops. |
 | **qa-runner** | You say "done", "finished", "ready to ship", "complete" | Runs the full verification gate: ruff format, ruff check, mypy, pytest with coverage. Blocks the "done" claim if anything fails. |

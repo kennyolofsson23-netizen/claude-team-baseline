@@ -8,9 +8,11 @@ Every incident is a chance to make the system a little harder to break. Post-mor
 
 ## When to write one
 
-- **Mandatory**: every S1 and S2 incident, within 7 days
-- **Recommended**: S3 that revealed a real gap
-- **Skip**: trivial bugs caught immediately, nothing learned
+- **Mandatory**: every S1 (app down, data at risk), within 7 days
+- **Recommended**: S2 that revealed a real gap
+- **Skip**: S3s, trivial bugs caught immediately, nothing learned
+
+Most products will go long stretches with no post-mortems. That's fine.
 
 ## Blameless
 
