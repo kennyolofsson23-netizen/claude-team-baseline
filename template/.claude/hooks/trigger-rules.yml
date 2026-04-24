@@ -1,0 +1,140 @@
+# Auto-invoke trigger rules for the team baseline.
+#
+# Each rule has:
+#   - name    : the agent or skill to auto-invoke
+#   - match   : list of keywords (case-insensitive) that fire this rule
+#   - inject  : the reminder text appended to the prompt when matched
+#
+# The router hook reads this file and injects matching reminders so Claude
+# spawns the right agent or follows the right skill without the junior dev
+# having to pick one manually.
+#
+# Adding a rule: keep keywords specific enough to avoid false positives.
+# Common words like "test" will match a lot — use phrases like "run tests".
+
+- name: writing-plans-and-architect
+  match: ["plan this", "design the", "architecture for", "new feature", "how should i", "how should we"]
+  inject: |
+    Before writing any code, produce a written plan. For tasks that need a
+    SPEC.md or ARCHITECTURE.md, spawn the `architect` agent via the Agent tool.
+    For simpler tasks, produce a 3-7 step numbered plan and show it to the
+    human before executing. Wait for confirmation.
+
+- name: spec-writer
+  match: ["user story", "acceptance criteria", "requirements", "write a spec"]
+  inject: |
+    Spawn the `spec-writer` agent. Produce user stories with acceptance
+    criteria. Do not write code until the spec is approved.
+
+- name: test-driven-development
+  match: ["implement", "build a", "add a function", "write code for", "add a feature"]
+  inject: |
+    Test-first. Before any implementation: write the failing test, run it
+    (confirm red), implement the minimum to pass (confirm green), refactor.
+    Never write implementation code without a failing test that describes
+    its behavior.
+
+- name: test-writer
+  match: ["write tests", "add tests", "cover this", "test coverage"]
+  inject: |
+    Spawn the `test-writer` agent. Tests live in `tests/` mirroring `src/`.
+    Use pytest. Use real MSSQL for DB tests — never mock the database.
+
+- name: code-review
+  match: ["review", "check my work", "pr ready", "ready for pr", "ready to merge"]
+  inject: |
+    Spawn the `code-reviewer` agent for a blocking review. Do not declare
+    the work done until the reviewer has signed off. If they find issues,
+    address them before claiming complete.
+
+- name: security-review
+  match: ["auth", "authentication", "authorization", "login", "password", "token", "secret", "crypto"]
+  inject: |
+    This prompt touches security-sensitive code. Spawn the `security-reviewer`
+    agent after implementation. Also follow `rules/python.md` secret handling
+    (pydantic-settings, never hardcode).
+
+- name: performance-review
+  match: ["slow", "optimize", "n+1", "performance", "query tuning", "hot path"]
+  inject: |
+    Spawn the `performance-reviewer` agent. For DB queries: check for N+1,
+    check execution plan for hot queries, verify indexes. See `rules/mssql.md`.
+
+- name: error-detective
+  match: ["traceback", "error:", "exception:", "stack trace", "bug report", "it crashed"]
+  inject: |
+    Spawn the `error-detective` agent. Diagnose root cause before proposing
+    a fix. Reproduce locally. Do not guess. See `superpowers:systematic-debugging`
+    if available.
+
+- name: verification-before-completion
+  match: ["done", "finished", "complete", "ship it", "ready", "let's merge"]
+  inject: |
+    Before claiming done: run the full verification gate.
+      uv run ruff format --check
+      uv run ruff check
+      uv run mypy
+      uv run pytest
+    All four must pass. For UI: Playwright screenshot. Show evidence, not
+    assertions. "Looks right" is not verification.
+
+- name: deployer
+  match: ["deploy", "release", "ship to", "push to prod", "publish"]
+  inject: |
+    Spawn the `deployer` agent. Verify tests pass, build Docker image, push
+    to `<registry.company.internal>`, deploy to the target from ARCHITECTURE.md
+    (default Azure App Service), smoke-test, write DEPLOY.md.
+
+- name: refactoring-specialist
+  match: ["refactor", "clean up", "simplify", "extract", "reduce duplication"]
+  inject: |
+    Spawn the `refactoring-specialist` agent. Behavior-preserving changes
+    only — no feature changes mixed in. Commit each refactoring step
+    separately. Tests must pass before and after.
+
+- name: project-scaffolder
+  match: ["new project", "scaffold", "start a new", "bootstrap a project"]
+  inject: |
+    Spawn the `project-scaffolder` agent. It copies the baseline template,
+    runs `uv sync`, initializes git, and runs the smoke test. See
+    `HANDOVER.md` and the baseline repo's `scripts/scaffold-project.sh`.
+
+- name: stack-reminder
+  match: ["react", "node.js", "nodejs", "nextjs", "mongodb", "postgres", "raw sql"]
+  inject: |
+    The prompt mentions something outside our approved stack. Our stack is:
+    Python 3.12, Streamlit or FastAPI, SQLAlchemy + MSSQL, uv, ruff, mypy,
+    pytest. Push back politely: "Our stack is X — here's how X solves this."
+    If the human has a real constraint, escalate via a PR to
+    `claude-team-baseline`. Do not quietly install off-stack packages.
+
+- name: mssql-ruleset
+  match: [".sql", "sql server", "mssql", "stored proc", "query plan"]
+  inject: |
+    Read `.claude/rules/mssql.md`. Key: no raw SQL in app code (use
+    SQLAlchemy ORM), no SELECT *, no NOLOCK, every FK gets an index, schema-
+    qualify table names, migrations via Alembic.
+
+- name: streamlit-patterns
+  match: ["streamlit", "st.cache", "st.session_state"]
+  inject: |
+    Streamlit reruns the whole script on every interaction. Use
+    `st.cache_data` / `st.cache_resource` for expensive operations with a
+    TTL. Name every `st.session_state` key; document its lifecycle. Show
+    spinners for anything > 1s.
+
+- name: fastapi-patterns
+  match: ["fastapi", "uvicorn", "dependency injection", "pydantic model"]
+  inject: |
+    FastAPI rules: dependencies via `Depends`, never global state. Async
+    routes when the work is I/O-bound. Pydantic models for every request
+    body and response. Use `httpx.AsyncClient` for tests, never sync
+    TestClient. Type every route signature.
+
+- name: domain-research
+  match: ["what does", "explain the", "what is", "what are", "how does"]
+  inject: |
+    If the question is about a domain concept (business rule, regulation,
+    industry term) you have not researched THIS session, launch a research
+    subagent before explaining. Pattern-matching from training data counts
+    as guessing. Cite sources in the answer.

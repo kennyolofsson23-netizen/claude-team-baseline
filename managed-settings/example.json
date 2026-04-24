@@ -1,0 +1,93 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-settings.json",
+  "_comment": "PHASE 2 — Enterprise license required. Deploy this file via MDM to: C:\\Program Files\\ClaudeCode\\managed-settings.json on every work PC. It outranks every user/project setting and cannot be bypassed. Rename to 'managed-settings.json' before deployment.",
+
+  "model": "claude-sonnet-4-6",
+  "_comment_model": "Default to Sonnet. Developers can request Opus for specific tasks but the default is pinned.",
+
+  "disableBypassPermissionsMode": "disable",
+  "_comment_bypass": "CRITICAL — without this, a dev can run 'claude --dangerously-skip-permissions' and void every control.",
+
+  "allowManagedPermissionRulesOnly": true,
+  "_comment_rules_only": "Devs cannot widen the allow-list locally. Any change goes through this file.",
+
+  "allowManagedMcpServersOnly": true,
+  "strictKnownMarketplaces": true,
+  "_comment_mcp": "Lock down MCP sources. Prevents malicious .mcp.json in cloned repos from auto-loading (see CVE-2025-59536).",
+
+  "forceLoginMethod": "claudeai",
+  "forceLoginOrgUUID": "<REPLACE_WITH_ENTERPRISE_ORG_UUID>",
+  "_comment_login": "Forces company Enterprise account. Devs cannot auth with personal Pro/Max accounts.",
+
+  "env": {
+    "PYTHONUTF8": "1",
+    "PYTHONIOENCODING": "utf-8",
+    "CLAUDE_AUDIT_ENDPOINT": "https://<audit-endpoint-internal>/claude-tool-calls"
+  },
+
+  "permissions": {
+    "allow": [
+      "Bash(git *)",
+      "Bash(gh *)",
+      "Bash(uv *)",
+      "Bash(ruff *)",
+      "Bash(mypy *)",
+      "Bash(pytest*)",
+      "Bash(streamlit *)",
+      "Bash(uvicorn *)",
+      "Bash(alembic *)",
+      "Bash(docker *)",
+      "Bash(az *)",
+      "Bash(curl -fsS *)",
+      "Read(**/*)",
+      "Write(**/*.py)",
+      "Write(**/*.md)",
+      "Write(**/*.yml)",
+      "Write(**/*.yaml)",
+      "Write(**/*.toml)",
+      "Write(**/*.sql)",
+      "Write(**/*.html)",
+      "Write(**/*.jinja2)"
+    ],
+    "deny": [
+      "Read(**/.env)",
+      "Read(**/.env.*)",
+      "Read(**/secrets/**)",
+      "Read(**/.ssh/**)",
+      "Read(**/id_rsa*)",
+      "Read(**/*.pem)",
+      "Read(**/*.key)",
+      "Read(**/*.pfx)",
+      "Bash(rm -rf /*)",
+      "Bash(git push --force*)",
+      "Bash(git push -f *)",
+      "Bash(git push origin main)",
+      "Bash(git push origin master)",
+      "Bash(npm install react*)",
+      "Bash(npm install next*)",
+      "Bash(npm install vue*)",
+      "Bash(npm install svelte*)",
+      "Bash(npx create-react-app*)",
+      "Bash(npm create vite*)",
+      "Bash(pnpm add react*)",
+      "Bash(yarn add react*)",
+      "Write(**/*.tsx)",
+      "Write(**/*.jsx)",
+      "Write(**/*.vue)",
+      "Write(**/*.svelte)",
+      "Write(**/package.json)",
+      "Write(**/package-lock.json)",
+      "Write(**/pnpm-lock.yaml)"
+    ]
+  },
+
+  "hooks": {
+    "PostToolUse": [
+      {
+        "_comment": "Audit every tool call to internal logging. 5s timeout so a slow audit service never blocks developers.",
+        "command": "curl -fsS -m 4 -X POST \"$CLAUDE_AUDIT_ENDPOINT\" -H 'Content-Type: application/json' -d @-",
+        "timeout_ms": 5000
+      }
+    ]
+  }
+}

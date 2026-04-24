@@ -1,0 +1,87 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-settings.json",
+  "model": "claude-sonnet-4-6",
+  "env": {
+    "PYTHONUTF8": "1",
+    "PYTHONIOENCODING": "utf-8"
+  },
+  "hooks": {
+    "UserPromptSubmit": [
+      {
+        "command": "python $CLAUDE_PROJECT_DIR/.claude/hooks/auto-invoke-router.py",
+        "timeout_ms": 3000
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "command": "python $CLAUDE_PROJECT_DIR/.claude/hooks/block-dangerous.py",
+        "timeout_ms": 3000
+      },
+      {
+        "matcher": "Bash",
+        "command": "python $CLAUDE_PROJECT_DIR/.claude/hooks/block-secrets.py",
+        "timeout_ms": 3000
+      }
+    ],
+    "PreCommit": [
+      {
+        "command": "python $CLAUDE_PROJECT_DIR/.claude/hooks/pre-commit-secrets.py",
+        "timeout_ms": 5000
+      }
+    ]
+  },
+  "permissions": {
+    "allow": [
+      "Bash(git status)",
+      "Bash(git diff*)",
+      "Bash(git log*)",
+      "Bash(git add *)",
+      "Bash(git commit -m *)",
+      "Bash(git push)",
+      "Bash(git push origin *)",
+      "Bash(git pull)",
+      "Bash(git fetch*)",
+      "Bash(git switch *)",
+      "Bash(git checkout -b *)",
+      "Bash(git branch*)",
+      "Bash(gh pr *)",
+      "Bash(gh issue *)",
+      "Bash(uv *)",
+      "Bash(ruff *)",
+      "Bash(mypy *)",
+      "Bash(pytest*)",
+      "Bash(streamlit run*)",
+      "Bash(uvicorn *)",
+      "Bash(alembic *)",
+      "Bash(docker build *)",
+      "Bash(docker run *)",
+      "Bash(curl -fsS *)",
+      "Bash(ls *)",
+      "Bash(cat *)",
+      "Bash(which *)"
+    ],
+    "deny": [
+      "Read(**/.env)",
+      "Read(**/.env.*)",
+      "Read(**/secrets/**)",
+      "Read(**/.ssh/**)",
+      "Read(**/id_rsa*)",
+      "Read(**/*.pem)",
+      "Read(**/*.key)",
+      "Bash(rm -rf /*)",
+      "Bash(git push --force*)",
+      "Bash(git push -f *)",
+      "Bash(npm install react*)",
+      "Bash(npm install next*)",
+      "Bash(npm install vue*)",
+      "Bash(npx create-react-app*)",
+      "Bash(npm create vite*)",
+      "Bash(pnpm add react*)",
+      "Write(**/*.tsx)",
+      "Write(**/*.jsx)",
+      "Write(**/*.vue)",
+      "Write(**/package.json)"
+    ]
+  }
+}
