@@ -131,6 +131,17 @@
     body and response. Use `httpx.AsyncClient` for tests, never sync
     TestClient. Type every route signature.
 
+- name: frontend-design
+  match: ["dashboard", "ui", "layout", "colour", "color", "design", "page", "form", "table", "button", "tailwind", "theme", "visual"]
+  inject: |
+    Follow the `frontend-design` skill. For Streamlit: use the team theme
+    (already in .streamlit/config.toml), column_config on every dataframe,
+    st.metric for KPIs, st.spinner for anything > 1s, empty-state messages
+    always. For Jinja2: Tailwind CDN, blue-600 primary, gray-50 background,
+    rounded-lg border cards, one h1 per page. No custom colours. No animations
+    beyond transition-colors. If complexity exceeds these rules, escalate to
+    the architect before coding.
+
 - name: domain-research
   match: ["what does", "explain the", "what is", "what are", "how does"]
   inject: |

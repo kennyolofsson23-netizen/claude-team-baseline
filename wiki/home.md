@@ -62,7 +62,7 @@ This is the living documentation for our team's Claude Code setup. If you're new
 ## At a glance
 
 <span class="pill">12 agents</span>
-<span class="pill">4 stack skills</span>
+<span class="pill">5 stack skills</span>
 <span class="pill">9 hooks</span>
 <span class="pill">7 rules</span>
 <span class="pill pill-outline">Python 3.12</span>

@@ -45,12 +45,12 @@ else
     FAIL=1
 fi
 
-# skill count (target: 4 stack-specific)
+# skill count (target: 5 stack-specific)
 SKILL_COUNT=$(ls -d "$BASELINE_DIR/template/.claude/skills"/*/ 2>/dev/null | wc -l | tr -d ' ')
-if [ "$SKILL_COUNT" -ge 4 ]; then
+if [ "$SKILL_COUNT" -ge 5 ]; then
     echo "  [ok] Skills: $SKILL_COUNT found"
 else
-    echo "  [X]  Skills: $SKILL_COUNT found (expected 4)"
+    echo "  [X]  Skills: $SKILL_COUNT found (expected 5)"
     FAIL=1
 fi
 
