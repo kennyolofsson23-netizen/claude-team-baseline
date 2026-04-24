@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>claude-team-baseline — Team Wiki</title>
+  <meta name="description" content="Shared Claude Code configuration for the engineering team — setup, agents, skills, rules, stack." />
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%23181b2e'/%3E%3Ctext x='50' y='66' font-size='60' text-anchor='middle' font-family='monospace' fill='%237c8cff' font-weight='700'%3EC%3C/text%3E%3C/svg%3E" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/docsify@4/lib/themes/vue.css" />
+  <style>
+    :root {
+      --theme-color: #5b6cff;
+      --theme-color-2: #3f4da8;
+      --sidebar-width: 300px;
+    }
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+    .app-name-link { font-weight: 700; color: #1a1d2e !important; }
+    .sidebar { background: #fafafb; border-right: 1px solid #ececf1; }
+    .sidebar-toggle { background: transparent; }
+    .sidebar ul li.active > a { color: var(--theme-color); font-weight: 600; border-right: 3px solid var(--theme-color); }
+    .content { padding-top: 0 !important; }
+    .markdown-section { max-width: 900px; }
+    .markdown-section h1 { border-bottom: 2px solid var(--theme-color); padding-bottom: 0.3em; }
+    .markdown-section h2 { margin-top: 2em; color: #2a2e4a; }
+    .markdown-section code { background: #f3f3f7; color: #c21d7a; padding: 2px 6px; border-radius: 3px; font-size: 0.9em; }
+    .markdown-section pre { background: #1a1d2e !important; border-radius: 6px; }
+    .markdown-section pre > code { background: transparent !important; color: #e6e7ef !important; }
+    .markdown-section table { border-collapse: collapse; width: 100%; margin: 1em 0; }
+    .markdown-section table th { background: #f0f1f5; text-align: left; padding: 10px; }
+    .markdown-section table td { padding: 10px; border-top: 1px solid #ececf1; }
+    .markdown-section blockquote { border-left: 4px solid var(--theme-color); background: #f5f6fc; padding: 12px 16px; border-radius: 0 6px 6px 0; }
+    .banner {
+      background: linear-gradient(120deg, #1a1d2e 0%, #3f4da8 100%);
+      color: white;
+      padding: 40px 32px;
+      border-radius: 10px;
+      margin-bottom: 2em;
+    }
+    .banner h1 { color: white; border-bottom: 0; margin: 0 0 0.4em 0; }
+    .banner p { margin: 0; opacity: 0.85; font-size: 1.1em; }
+    .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; margin: 2em 0; }
+    .card { background: #fafafb; border: 1px solid #ececf1; border-radius: 8px; padding: 20px; transition: border-color 0.2s, transform 0.2s; }
+    .card:hover { border-color: var(--theme-color); transform: translateY(-2px); }
+    .card h3 { margin-top: 0; color: var(--theme-color); }
+    .card p { margin-bottom: 0; color: #5a5e78; }
+    .pill { display: inline-block; background: var(--theme-color); color: white; padding: 2px 10px; border-radius: 12px; font-size: 0.8em; margin-right: 6px; }
+    .pill-outline { background: transparent; border: 1px solid var(--theme-color); color: var(--theme-color); }
+  </style>
+</head>
+<body>
+  <div id="app">Loading the team wiki…</div>
+  <script>
+    window.$docsify = {
+      name: 'claude-team-baseline',
+      repo: '',
+      loadSidebar: true,
+      loadNavbar: false,
+      subMaxLevel: 3,
+      maxLevel: 4,
+      auto2top: true,
+      coverpage: false,
+      homepage: 'home.md',
+      search: {
+        maxAge: 86400000,
+        paths: 'auto',
+        placeholder: 'Search the wiki…',
+        noData: 'No matches.',
+        depth: 4
+      },
+      alias: {
+        '/.*/_sidebar.md': '/_sidebar.md'
+      },
+      pagination: {
+        previousText: 'Previous',
+        nextText: 'Next',
+        crossChapter: true
+      }
+    }
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/docsify@4"></script>
+  <script src="https://cdn.jsdelivr.net/npm/docsify/lib/plugins/search.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/docsify-pagination@2/dist/docsify-pagination.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/docsify-copy-code@2"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1/components/prism-bash.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1/components/prism-python.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1/components/prism-yaml.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1/components/prism-json.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1/components/prism-sql.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1/components/prism-docker.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1/components/prism-powershell.min.js"></script>
+</body>
+</html>

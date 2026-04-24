@@ -16,9 +16,11 @@ Without a shared baseline, every developer ends up with a slightly different Cla
 - `managed-settings/` — the enterprise policy file to deploy via MDM once we have the Enterprise license (phase 2).
 
 ## Start here
-- New developer joining the team → `ONBOARDING.md`
-- Setting this up on your work machine → `HANDOVER.md`
-- Planning the next phase (MDM, MCP gateway, SSO) → `ROADMAP.md`
+- **Interactive wiki** → open `wiki/index.html` in your browser. Polished, searchable, covers everything.
+- **One-command setup** on a fresh work PC → run `PowerShell -ExecutionPolicy Bypass -File .\scripts\bootstrap.ps1 -RepoUrl "<url>"` as Administrator
+- **Manual setup** → `HANDOVER.md`
+- **New developer** → `ONBOARDING.md`
+- **Next phases** (MDM, MCP gateway, SSO) → `ROADMAP.md`
 
 ## Core stack (the one true way)
 Python 3.12, Streamlit, FastAPI where Streamlit cannot reach, SQLAlchemy + MSSQL, uv + ruff + mypy + pytest. See `template/.claude/CLAUDE.md` for the full rules. There is no "React project" template. There is no "Postgres project" template. If you need one, talk to the architect.
