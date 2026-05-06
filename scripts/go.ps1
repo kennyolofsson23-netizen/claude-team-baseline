@@ -32,8 +32,8 @@ if (-not $principal.IsInRole([Security.Principal.WindowsBuiltInRole]::Administra
     exit 1
 }
 
-# ---------- step 1: WSL update (required for Docker Desktop) ----------
-Step 1 "Updating WSL (required for Docker Desktop)"
+# ---------- step 1: WSL update (required for Rancher Desktop) ----------
+Step 1 "Updating WSL (required for Rancher Desktop)"
 wsl --update 2>&1 | ForEach-Object { Write-Host "    $_" }
 Ok "WSL updated"
 
@@ -48,7 +48,7 @@ $packages = @(
     @{ Id = "Anthropic.ClaudeCode";                    Label = "Claude Code" }
     @{ Id = "astral-sh.uv";                            Label = "uv" }
     @{ Id = "Microsoft.VisualStudioCode";              Label = "VS Code" }
-    @{ Id = "Docker.DockerDesktop";                    Label = "Docker Desktop" }
+    @{ Id = "SUSE.RancherDesktop";                     Label = "Rancher Desktop" }
     @{ Id = "Microsoft.ODBCDriverForSQLServer.18";     Label = "MS ODBC Driver 18" }
 )
 
@@ -152,4 +152,4 @@ Write-Host "  # Start a Claude session in any project folder:" -ForegroundColor 
 Write-Host "  cd `$env:USERPROFILE\work\hello-claude" -ForegroundColor White
 Write-Host "  claude" -ForegroundColor White
 Write-Host ""
-Write-Host "If anything seems off, reboot (Docker + PATH often need it) and re-run this script."
+Write-Host "If anything seems off, reboot (Rancher Desktop + PATH often need it) and re-run this script."
